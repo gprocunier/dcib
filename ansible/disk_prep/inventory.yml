@@ -1,0 +1,61 @@
+dcib:                                                                                                                                                                                                                                         
+  hosts:                                                                                                                                                                                                                                      
+    localhost:
+  vars:
+    unit: "GiB"
+    devs:
+      samsung_980p_1tb:
+        - path: /dev/disk/by-id/nvme-eui.002538b11150b8c8
+          table:
+            - 256GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.002538b21150aa92
+          table:
+            - 256GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.002538b11150b8c9
+          table:
+            - 256GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.002538b2115098b3
+          table:
+            - 256GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.002538b11150c7b6
+          table:
+            - 256GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.002538b211508b77
+          table:
+            - 256GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.002538b11150b7c8
+          table:
+            - 256GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.002538b211508b79
+          table:
+            - 256GiB
+            - remain
+      samsung_983e_2tb:
+        - path: /dev/disk/by-id/nvme-eui.343336304e9172650025384100000003
+          table:
+            - 1024GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.343336304e9166570025384100000003
+          table:
+            - 1024GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.343336304d8223120025384100000004
+          table:
+            - 1024GiB
+            - remain
+        - path: /dev/disk/by-id/nvme-eui.343336304d8223100025384100000004
+          table:
+            - 1024GiB
+            - remain
+      intel_optane_p5800x:
+        - path: /dev/disk/by-id/nvme-eui.01000000000000005cd2e49227155351
+          table:
+            - 256GiB
+            - remain
