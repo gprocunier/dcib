@@ -1,0 +1,26 @@
+---
+- name: prep devices
+  hosts: all
+  connection: local
+  tasks:
+    - name: wipe devs
+      shell: /usr/bin/dd if=/dev/zero of={{ item.path }} bs=4M oflag=direct count=256
+      with_items:
+        - "{{ devs.samsung_980p_1tb }}" 
+        - "{{ devs.samsung_983e_2tb }}"
+        - "{{ devs.intel_optane_p5800x }}"
+    - name: create partition schema for samsung_980p_1tb devices
+      include_tasks: task_create_table.yml
+      loop: "{{ devs.samsung_980p_1tb | flatten(levels=1) }}"
+      loop_control:
+        loop_var: dev
+    - name: create partition schema for samsung_983e_2tb devices
+      include_tasks: task_create_table.yml
+      loop: "{{ devs.samsung_983e_2tb | flatten(levels=1) }}"
+      loop_control:
+        loop_var: dev
+    - name: create partition schema for intel_optane_p5800x devices
+      include_tasks: task_create_table.yml
+      loop: "{{ devs.intel_optane_p5800x | flatten(levels=1) }}"
+      loop_control:
+        loop_var: dev
