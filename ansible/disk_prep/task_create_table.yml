@@ -1,0 +1,15 @@
+---
+- name: create partition
+  community.general.parted:
+    device: '{{ dev.path }}'
+    number: '{{ table_index + 1 }}'
+    state: present
+    align: optimal
+    part_start: '{{ omit if (table_index == 0) else position }}'
+    part_end: '{{ item if item != "remain" else "100%" | default(item) }}'
+    unit: '{{ unit }}'
+  vars:
+    position: '{{ dev.table[table_index - 1] }}'
+  loop: "{{ dev.table | flatten(levels=1) }}"
+  loop_control:
+    index_var: table_index
