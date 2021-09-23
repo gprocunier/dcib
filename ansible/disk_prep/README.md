@@ -26,6 +26,7 @@ Samsung SSD 980 PRO 1TB                  nvme5n1       931.5G
 Samsung SSD 980 PRO 1TB                  nvme1n1       931.5G
 ```
 
+# Ansible doin the lords work..
 ```
 root@rhosp-dcib ansible]# ansible-playbook -i inventory.yml prep_disks.yml 
 
