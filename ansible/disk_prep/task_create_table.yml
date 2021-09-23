@@ -6,10 +6,11 @@
     state: present
     align: optimal
     part_start: '{{ omit if (table_index == 0) else position }}'
-    part_end: '{{ item if item != "remain" else "100%" | default(item) }}'
+    part_end: '{{ item.size if item.size != "remain" else "100%" | default(item.size) }}'
     unit: '{{ unit }}'
   vars:
-    position: '{{ dev.table[table_index - 1] }}'
+    position: '{{ dev.table[table_index - 1].size }}'
   loop: "{{ dev.table | flatten(levels=1) }}"
   loop_control:
     index_var: table_index
+  tags: parted
