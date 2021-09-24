@@ -60,6 +60,10 @@ dcib:
         vdoSlabSize: 32g
 
     lvmcfg:
+      "samsung_980p_8x_r0":
+        device: /dev/md1
+        pe_size: "32"
+        vg_options: "--alloc contiguous"
       "samsung_983e_4x_r0":
         device: /dev/md2
         pe_size: "32"
