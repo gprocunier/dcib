@@ -53,6 +53,13 @@ cip_config:
 
 standalone_extra_config:
   cinder::config::cinder_config:
+   default_volume_type:
+     value: samsung_980p_vdo
+   enabled_backends:
+     value: "samsung_980p_vdo,intel_p5800x_2x_r0,samsung_980p_8x_r0,samsung_983e_4x_r0,intel_p5800x_00,intel_p5800x_01,samsung_983e_00,samsung_983e_01,samsung_983e_02,samsung_983e_03"
+   backend_defaults/lvm_type:
+     value: default
+
    samsung_980p_vdo/volume_driver:
      value: cinder.volume.drivers.lvm.LVMVolumeDriver
    samsung_980p_vdo/volume_group:
