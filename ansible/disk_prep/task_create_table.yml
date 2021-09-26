@@ -1,6 +1,6 @@
 ---
 - name: create partition
-  community.general.parted:
+  parted:
     device: '{{ dev.path }}'
     number: '{{ table_index + 1 }}'
     state: present
