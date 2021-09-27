@@ -96,6 +96,12 @@
         vg: "{{ item.key }}"
         pvs: "{{ item.value.device }}"
         pesize: "{{ item.value.pe_size }}"
-        vg_options: "{{ item.value.vg_options }}"
+        vg_options: "{{ item.value.vg_options | default(omit) }}"
       with_dict: "{{ lvmcfg }}"
       tags: lvm
+    - name: crete ceph volumes
+      lvol:
+        vg: "{{ item.value.vg }}"
+        lv: "{{ item.key }}"
+        size: "{{ item.value.size }}"
+      with_dict: "{{ cephvols }}"
