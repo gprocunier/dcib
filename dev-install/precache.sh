@@ -60,7 +60,7 @@ _E_O_F_
 
 podman login registry.redhat.io
 
-forklimit=10
+forklimit=32
 
 for runner in $containers
 do
