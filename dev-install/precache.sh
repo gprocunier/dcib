@@ -1,4 +1,4 @@
-#!/bin/bash                                                                                                                                                                                                                         [20/44912]
+#!/bin/bash
                                                            
 read -r -d '' containers <<'_E_O_F_'                  
 registry.redhat.io/rhceph/rhceph-4-rhel8:latest    
