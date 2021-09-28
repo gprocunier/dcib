@@ -51,13 +51,15 @@
       ignore_errors: true
       tags: clean
 # possibly unnecessary
-#    - name: wipe devs
-#      shell: /usr/bin/dd if=/dev/zero of={{ item.path }} bs=4M oflag=direct count=256
-#      with_items:
-#        - "{{ devs.samsung_980p_1tb }}" 
-#        - "{{ devs.samsung_983e_2tb }}"
-#        - "{{ devs.intel_optane_p5800x }}"
-#      tags: clean
+# be mindful that these fork in the background to save time and will not have 
+# completed when the play ends
+    - name: wipe devs
+      shell: /usr/bin/dd if=/dev/zero of={{ item.path }} bs=64M oflag=direct &
+      with_items:
+        - "{{ devs.samsung_980p_1tb }}"
+        - "{{ devs.samsung_983e_2tb }}"
+        - "{{ devs.intel_optane_p5800x }}"
+      tags: [ 'never', 'wipe' ]
     - name: create partition schema for samsung_980p_1tb devices
       include_tasks: task_create_table.yml
       loop: "{{ devs.samsung_980p_1tb | flatten(levels=1) }}"
