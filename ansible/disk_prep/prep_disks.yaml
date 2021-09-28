@@ -8,6 +8,19 @@
       with_dict: "{{ vdocfg | combine(lvmcfg) }}"
       tags: clean
       ignore_errors: true
+    - name: shut down pre-existing vdo sets
+      shell: vdo remove -n {{ item.key }}
+      with_dict: "{{ vdocfg }}"
+      ignore_errors: true
+      tags: clean
+    - name: deactivate and remove lvs
+      shell:
+        cmd: |
+          lvchange -an {{ item.value.vg }}/{{ item.key }}
+          lvremove {{item.value.vg }}/{{ item.key }}
+      with_dict: "{{ cephvols }}"
+      ignore_errors: true
+      tags: clean
     - name: remove cinder volume groups
       lvg:
         vg: "{{ item.key }}"
@@ -15,11 +28,6 @@
       with_dict: "{{ vdocfg | combine(lvmcfg) }}"
       tags: clean
       ignore_errors: true
-    - name: shut down pre-existing vdo sets
-      shell: vdo remove -n {{ item.key }}
-      with_dict: "{{ vdocfg }}"
-      ignore_errors: true
-      tags: clean
     - name: shut down pre-existing raid sets
       shell: /usr/sbin/mdadm --stop {{ item.key }}
       with_dict: "{{ raidcfg }}"
@@ -35,13 +43,21 @@
       loop: "{{ lookup('dict', raidcfg) }}"
       ignore_errors: true
       tags: clean
-    - name: wipe devs
-      shell: /usr/bin/dd if=/dev/zero of={{ item.path }} bs=4M oflag=direct count=256
-      with_items:
-        - "{{ devs.samsung_980p_1tb }}" 
-        - "{{ devs.samsung_983e_2tb }}"
-        - "{{ devs.intel_optane_p5800x }}"
+    - name: remove lvm signature from pvs
+      shell:
+        cmd: |
+          pvremove {{ item.value.device }}
+      with_dict: "{{ lvmcfg }}"
+      ignore_errors: true
       tags: clean
+# possibly unnecessary
+#    - name: wipe devs
+#      shell: /usr/bin/dd if=/dev/zero of={{ item.path }} bs=4M oflag=direct count=256
+#      with_items:
+#        - "{{ devs.samsung_980p_1tb }}" 
+#        - "{{ devs.samsung_983e_2tb }}"
+#        - "{{ devs.intel_optane_p5800x }}"
+#      tags: clean
     - name: create partition schema for samsung_980p_1tb devices
       include_tasks: task_create_table.yml
       loop: "{{ devs.samsung_980p_1tb | flatten(levels=1) }}"
