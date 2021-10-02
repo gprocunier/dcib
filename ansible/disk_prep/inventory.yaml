@@ -1,0 +1,145 @@
+dcib:                                                                                                     
+  hosts:
+    localhost:
+  vars:
+    # 20t based on a 10:1 ratio of physical to logical dedupe/compresison
+    # source: https://bit.ly/vdo-logical-size-recommendation
+    vdocfg:
+      "stripe0-vdo":
+        pe_size: 32
+        virt_size: 20t
+        vg: "samsung_980p"
+        device:  
+          - /dev/samsung_980p/stripe0
+
+    # Create the 8-way stripe for the VDO backing store
+    lvcfg:
+      "stripe0":    
+        vg: "samsung_980p"
+        opts: "-i 8 -I 4k"
+        size: 2t          
+        
+    # Use device WWNs as they are consistent and will survive
+    # the m.2 carrier being shuffled
+    vgcfg:       
+      "samsung_980p": 
+        pe_size: "32"     
+        device:     
+          - /dev/disk/by-id/nvme-eui.002538b11150b8c8
+          - /dev/disk/by-id/nvme-eui.002538b21150aa92
+          - /dev/disk/by-id/nvme-eui.002538b11150b8c9
+          - /dev/disk/by-id/nvme-eui.002538b2115098b3
+          - /dev/disk/by-id/nvme-eui.002538b11150c7b6
+          - /dev/disk/by-id/nvme-eui.002538b211508b77
+          - /dev/disk/by-id/nvme-eui.002538b11150b7c8
+          - /dev/disk/by-id/nvme-eui.002538b211508b79
+      "samsung_983e":
+        pe_size: "32" 
+        device:           
+          - /dev/disk/by-id/nvme-eui.343336304e9172650025384100000003
+          - /dev/disk/by-id/nvme-eui.343336304e9166570025384100000003
+          - /dev/disk/by-id/nvme-eui.343336304d8223120025384100000004
+          - /dev/disk/by-id/nvme-eui.343336304d8223100025384100000004
+      "intel_p5800x":
+        pe_size: "32"
+        device:        
+          - /dev/disk/by-id/nvme-eui.01000000000000005cd2e41f893b5351
+          - /dev/disk/by-id/nvme-eui.01000000000000005cd2e49227155351
+                                                                               
+    cephvols:          
+      "ceph-osd-0":       
+        vg: "samsung_983e"
+        size: 850g
+        device: 0      
+      "ceph-osd-1":       
+        vg: "samsung_983e"
+        size: 850g
+        device: 0      
+      "ceph-osd-2":       
+        vg: "samsung_983e"
+        size: 850g
+        device: 1      
+      "ceph-osd-3":
+        vg: "samsung_983e"
+        size: 850g
+        device: 1
+      "ceph-osd-4":
+        vg: "samsung_983e"
+        size: 850g
+        device: 2
+      "ceph-osd-5":
+        vg: "samsung_983e"
+        size: 850g
+        device: 2
+      "ceph-osd-6":
+        vg: "samsung_983e"
+        size: 850g
+        device: 3
+      "ceph-osd-7":
+        vg: "samsung_983e"
+        size: 850g
+        device: 3
+      "ceph-osd-0-db":
+        vg: "intel_p5800x"
+        size: 40g
+        device: 0
+      "ceph-osd-1-db":
+        vg: "intel_p5800x"
+        size: 40g   
+        device: 0
+      "ceph-osd-2-db":
+        vg: "intel_p5800x"
+        size: 40g
+        device: 0
+      "ceph-osd-3-db":
+        vg: "intel_p5800x"
+        size: 40g   
+        device: 0
+      "ceph-osd-4-db":
+        vg: "intel_p5800x"
+        size: 40g
+        device: 1
+      "ceph-osd-5-db":
+        vg: "intel_p5800x"
+        size: 40g   
+        device: 1
+      "ceph-osd-6-db":
+        vg: "intel_p5800x"
+        size: 40g
+        device: 1
+      "ceph-osd-7-db":
+        vg: "intel_p5800x"
+        size: 40g   
+        device: 1
+      "ceph-osd-0-wal":
+        vg: "intel_p5800x"
+        size: 10g
+        device: 0
+      "ceph-osd-1-wal":
+        vg: "intel_p5800x"
+        size: 10g   
+        device: 0
+      "ceph-osd-2-wal":
+        vg: "intel_p5800x"
+        size: 10g
+        device: 0
+      "ceph-osd-3-wal":
+        vg: "intel_p5800x"
+        size: 10g   
+        device: 0
+      "ceph-osd-4-wal":
+        vg: "intel_p5800x"
+        size: 10g
+        device: 1
+      "ceph-osd-5-wal":
+        vg: "intel_p5800x"
+        size: 10g   
+        device: 1
+      "ceph-osd-6-wal":
+        vg: "intel_p5800x"
+        size: 10g
+        device: 1
+      "ceph-osd-7-wal":
+        vg: "intel_p5800x"
+        size: 10g   
+        device: 1
