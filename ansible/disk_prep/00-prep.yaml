@@ -1,0 +1,114 @@
+---       
+- name: prep devices        
+  hosts: all                              
+  connection: local                   
+  tasks:                                                         
+    - name: wipe the metadata of the ceph volumes
+      shell:                  
+        cmd: |                     
+          if [[ -b {{ path }} ]]
+          then              
+            dd if=/dev/zero of={{ path }} bs=10M count=1 oflag=direct
+          fi                         
+      vars:                                          
+        path: "/dev/{{ item.value.vg }}/{{ item.key }}"
+      with_dict: "{{ cephvols }}"
+      tags: clean             
+    - name: remove the ceph volumes
+      lvol:                                             
+        lv: "{{ item.key }}"                     
+        vg: "{{ item.value.vg }}"
+        size: "{{ item.value.size }}"
+        pvs: "{{ vgcfg[item.value.vg].device[item.value.device] }}"                                                                                            
+        opts: "{{ item.value.opts | default(omit) }}"                                                                                                          
+        state: absent          
+        force: yes
+      with_dict: "{{ cephvols }}"                    
+      tags: clean                                                                                                                                              
+    - name: remove the old VDO pool with the striped backing store
+      lvg:
+        vg: "{{ item.key }}"
+        pesize: "{{ item.value.pe_size }}"
+        pvs: "/dev/{{ item.value.vg }}/{{ item.key }}"
+        vg_options: "{{ item.value.vg_options | default(omit) }}"
+        state: absent 
+        force: yes             
+      with_dict: "{{ vdocfg }}"
+      tags: clean                  
+    - name: remove signature of vdo stripes
+      shell:                
+        cmd: |                   
+          if [[ -b {{ path }} ]]     
+          then                                                     
+            pvremove --yes {{ path }}                
+          fi          
+      vars:                      
+        path: "/dev/{{ item.value.vg }}/{{ item.key }}"
+      with_dict: "{{ vdocfg }}"
+      tags: clean
+    - name: clean-up old lvs
+      lvol:
+        lv: "{{ item.key }}"
+        vg: "{{ item.value.vg }}"
+        size: "{{ item.value.size }}"
+        opts: "{{ item.value.opts | default(omit) }}"
+        state: absent
+        force: yes
+      vars:
+      with_dict: "{{ lvcfg }}"
+      tags: clean
+    - name: remove volume groups
+      lvg:
+        vg: "{{ item.key }}"
+        pesize: "{{ item.value.pe_size }}"
+        pvs: "{{ item.value.device }}"
+        vg_options: "{{ item.value.vg_options | default(omit) }}"
+        state: absent
+      with_dict: "{{ vgcfg }}"
+      tags: clean
+    - name: create volume groups
+      lvg:
+        vg: "{{ item.key }}"
+        pesize: "{{ item.value.pe_size }}"
+        pvs: "{{ item.value.device }}"
+        vg_options: "{{ item.value.vg_options | default(omit) }}"
+        state: present
+      with_dict: "{{ vgcfg }}"
+    - name: create required volumes
+      lvol:
+        lv: "{{ item.key }}"
+        vg: "{{ item.value.vg }}"
+        size: "{{ item.value.size }}"
+        opts: "{{ item.value.opts | default(omit) }}"
+        state: present
+      vars:
+      with_dict: "{{ lvcfg }}"
+
+    # lvconviert -V doesnt work, have to manually resize
+    - name: convert stripe to VDO Pool and resize
+      shell:
+        cmd: |
+          lvconvert --yes --type vdo-pool -n {{ item.key }} {{ item.value.device[0] }} || exit 1
+          lvresize --yes -L {{ item.value.virt_size }} {{ item.value.vg }}/{{ item.key }} || exit 2
+      with_dict: "{{ vdocfg }}"
+
+    # This requires scan_lvs = 1 in /etc/lvm/lvm.conf
+    # example config here: https://github.com/gprocunier/dcib/blob/main/dev-install/lvm.conf
+    - name: create the new VDO pool with the striped backing store
+      lvg:
+        vg: "{{ item.key }}"
+        pesize: "{{ item.value.pe_size }}"
+        pvs: "/dev/{{ item.value.vg }}/{{ item.key }}"
+        vg_options: "{{ item.value.vg_options | default(omit) }}"
+        state: present
+      with_dict: "{{ vdocfg }}"
+
+    - name: create the ceph volumes
+      lvol:
+        lv: "{{ item.key }}"
+        vg: "{{ item.value.vg }}"
+        size: "{{ item.value.size }}"
+        pvs: "{{ vgcfg[item.value.vg].device[item.value.device] }}"
+        opts: "{{ item.value.opts | default(omit) }}"
+        state: present
+      with_dict: "{{ cephvols }}"
