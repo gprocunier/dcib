@@ -78,7 +78,7 @@
         opts: "{{ item.value.opts | default(omit) }}"
         state: present
       with_dict: "{{ cephvols }}"
-    - name: create vdo/auxilary volumes
+    - name: create vdo/auxiliary volumes
       lvol:
         lv: "{{ item.key }}"
         vg: "{{ item.value.vg }}"
@@ -107,7 +107,7 @@
         state: present
       with_dict: "{{ vdocfg }}"
 
-    - name: create the new auxilary pools with the striped backing store
+    - name: create the new auxiliary pools with the striped backing store
       lvg:
         vg: "{{ item.key }}"
         pesize: "{{ item.value.pe_size }}"
