@@ -1,66 +1,73 @@
 # Override default variables by putting them in this file
-standalone_host: <public ip>
+standalone_host: 46.246.26.14
+# since this is an AIO deployment, lets take advantage of large mtu similar to loopback
+# this feature is not merged into the main dev-install distro (yet)
+dummy_mtu: 65536
+rhos_release: 16.2
 rhsm_enabled: true
 redhat_registry_credentials:
-  "object": "token"
-rhsm_org_id: orgnumbers
-rhsm_activation_key: thekey
+  "userid": "token"
+rhsm_org_id: 999999999999
+rhsm_activation_key: 7777-7777-7777-7777-7777
 hostname: rhosp-dcib
 clouddomain: example.com
 localcloudname: rhosp-dcib
 octavia_enabled: true
 manila_enabled: true
 ceph_enabled: true
+# this toggles lvm syntax for the ceph jinja2 template
+# this feature is not merged into the main dev-install distro (yet)
 ceph_devices_lvm: true
+
 ceph_devices:
   - data: ceph-osd-0
-    data_vg: samsung_983e_00
+    data_vg: samsung_983e
     db: ceph-osd-0-db
-    db_vg: intel_p5800x_00
+    db_vg: intel_p5800x
     wal: ceph-osd-0-wal
-    wal_vg: intel_p5800x_00
+    wal_vg: intel_p5800x
   - data: ceph-osd-1
-    data_vg: samsung_983e_00
+    data_vg: samsung_983e
     db: ceph-osd-1-db
-    db_vg: intel_p5800x_00
+    db_vg: intel_p5800x
     wal: ceph-osd-1-wal
-    wal_vg: intel_p5800x_00
+    wal_vg: intel_p5800x
   - data: ceph-osd-2
-    data_vg: samsung_983e_01
+    data_vg: samsung_983e
     db: ceph-osd-2-db
-    db_vg: intel_p5800x_00
+    db_vg: intel_p5800x
     wal: ceph-osd-2-wal
-    wal_vg: intel_p5800x_00
+    wal_vg: intel_p5800x
   - data: ceph-osd-3
-    data_vg: samsung_983e_01
+    data_vg: samsung_983e
     db: ceph-osd-3-db
-    db_vg: intel_p5800x_00
+    db_vg: intel_p5800x
     wal: ceph-osd-3-wal
-    wal_vg: intel_p5800x_00
+    wal_vg: intel_p5800x
   - data: ceph-osd-4
-    data_vg: samsung_983e_02
+    data_vg: samsung_983e
     db: ceph-osd-4-db
-    db_vg: intel_p5800x_01
+    db_vg: intel_p5800x
     wal: ceph-osd-4-wal
-    wal_vg: intel_p5800x_01
+    wal_vg: intel_p5800x
   - data: ceph-osd-5
-    data_vg: samsung_983e_02
+    data_vg: samsung_983e
     db: ceph-osd-5-db
-    db_vg: intel_p5800x_01
+    db_vg: intel_p5800x
     wal: ceph-osd-5-wal
-    wal_vg: intel_p5800x_01
+    wal_vg: intel_p5800x
   - data: ceph-osd-6
-    data_vg: samsung_983e_03
+    data_vg: samsung_983e
     db: ceph-osd-6-db
-    db_vg: intel_p5800x_01
+    db_vg: intel_p5800x
     wal: ceph-osd-6-wal
-    wal_vg: intel_p5800x_01
+    wal_vg: intel_p5800x
   - data: ceph-osd-7
-    data_vg: samsung_983e_03
+    data_vg: samsung_983e
     db: ceph-osd-7-db
-    db_vg: intel_p5800x_01
+    db_vg: intel_p5800x
     wal: ceph-osd-7-wal
-    wal_vg: intel_p5800x_01
+    wal_vg: intel_p5800x
 
 virt_release: av
 rhsm_release: 8.4
@@ -74,7 +81,31 @@ rhsm_repos:
   - fast-datapath-for-rhel-8-x86_64-rpms
   - advanced-virt-for-rhel-8-x86_64-rpms
   - rhceph-4-tools-for-rhel-8-x86_64-rpms
-kernel_args: "amd_iommu=on iommu=pt nohz=off processor.max_cstate=0 nosoftlockup default_hugepagez=1G hugepagesz=1G hugepages=384 nps=1"
+
+# The dual AMD EPYC 75F3 32-Core Processor has the followng numa topology (128vcpu):
+#
+# NUMA node0 CPU(s):   0-3,64-67
+# NUMA node1 CPU(s):   4-7,68-71
+# NUMA node2 CPU(s):   8-11,72-75
+# NUMA node3 CPU(s):   12-15,76-79
+# NUMA node4 CPU(s):   16-19,80-83
+# NUMA node5 CPU(s):   20-23,84-87
+# NUMA node6 CPU(s):   24-27,88-91
+# NUMA node7 CPU(s):   28-31,92-95
+# NUMA node8 CPU(s):   32-35,96-99
+# NUMA node9 CPU(s):   36-39,100-103
+# NUMA node10 CPU(s):  40-43,104-107
+# NUMA node11 CPU(s):  44-47,108-111
+# NUMA node12 CPU(s):  48-51,112-115
+# NUMA node13 CPU(s):  52-55,116-119
+# NUMA node14 CPU(s):  56-59,120-123
+# NUMA node15 CPU(s):  60-63,124-127
+#
+# We will isolate the host os and cloud internals on numa nodes0 through nodes3 (32 vcpu)
+# the remaining we will use for instance scheduling
+# kernel_args: "amd_iommu=on iommu=pt nohz=off processor.max_cstate=0 nosoftlockup default_hugepagez=1G hugepagesz=1G hugepages=384 isolcpus=16-19,80-83,20-23,84-87,24-27,88-91,28-31,92-95,32-35,96-99,36-39,100-103,40-43,104-107,44-47,108-111,48-51,112-115,52-55,116-119,56-59,120-123,60-63,124-127"
+# hugepages=384 facilitates 192x 2gb, 96x 4gb, 48x 8gb instances in performance memory alignment
+kernel_args: "amd_iommu=on iommu=pt nohz=off processor.max_cstate=0 nosoftlockup default_hugepagez=1G hugepagesz=1G hugepages=384"
 cip_config:
   - set:
       ceph_alertmanager_image: ose-prometheus-alertmanager
@@ -101,86 +132,35 @@ cip_config:
     tag_from_label: '{version}-{release}'
 
 standalone_extra_config:
-  cinder::api::default_volume_type: "samsung_980p_vdo"
+  neutron::plugins::ml2::ovn::ovn_emit_need_to_frag: true
+  cinder::api::default_volume_type: "stripe-vdo"
   cinder_user_enabled_backends:
-    - samsung_980p_vdo
-    - intel_p5800x_2x_r0
-    - samsung_980p_8x_r0
-    - samsung_983e_4x_r0
-    - intel_p5800x_00
-    - intel_p5800x_01
-      
+    - stripe-vdo
+    - stripe-performance
+    - stripe-ultra
+
   cinder::config::cinder_config:
     backend_defaults/lvm_type:
       value: default
 
-    samsung_980p_vdo/volume_driver:
+    stripe-vdo/volume_driver:
       value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    samsung_980p_vdo/volume_group:
-      value: samsung_980p_vdo
-    samsung_980p_vdo/volume_backend_name:
+    stripe-vdo/volume_group:
+      value: stripe-vdo
+    stripe-vdo/volume_backend_name:
       value: vdo
 
-    samsung_980p_8x_r0/volume_driver:
+    stripe-performance/volume_driver:
       value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    samsung_980p_8x_r0/volume_group:
-      value: samsung_980p_8x_r0
-    samsung_980p_8x_r0/volume_backend_name:
-      value: raid0
+    stripe-performance/volume_group:
+      value: stripe-performance
+    stripe-performance/volume_backend_name:
+      value: performance
 
-    samsung_983e_4x_r0/volume_driver:
+    stripe-ultra/volume_driver:
       value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    samsung_983e_4x_r0/volume_group:
-      value: samsung_983e_4x_r0
-    samsung_983e_4x_r0/volume_backend_name:
-      value: raid0
-
-    intel_p5800x_2x_r0/volume_driver:
-      value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    intel_p5800x_2x_r0/volume_group:
-      value: intel_p5800x_2x_r0
-    intel_p5800x_2x_r0/volume_backend_name:
-      value: raid0
-
-    samsung_983e_00/volume_driver:
-      value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    samsung_983e_00/volume_group:
-      value: samsung_983e_00
-    samsung_983e_00/volume_backend_name:
-      value: ceph-osd-0
-
-    samsung_983e_01/volume_driver:
-      value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    samsung_983e_01/volume_group:
-      value: samsung_983e_01
-    samsung_983e_01/volume_backend_name:
-      value: ceph-osd-1
-
-    samsung_983e_02/volume_driver:
-      value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    samsung_983e_02/volume_group:
-      value: samsung_983e_02
-    samsung_983e_02/volume_backend_name:
-      value: ceph-osd-2
-
-    samsung_983e_03/volume_driver:
-      value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    samsung_983e_03/volume_group:
-      value: samsung_983e_03
-    samsung_983e_03/volume_backend_name:
-      value: ceph-osd-3
-
-    intel_p5800x_00/volume_driver:
-      value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    intel_p5800x_00/volume_group:
-      value: intel_p5800x_00
-    intel_p5800x_00/volume_backend_name:
-      value: ceph-db-0
-
-    intel_p5800x_01/volume_driver:
-      value: cinder.volume.drivers.lvm.LVMVolumeDriver
-    intel_p5800x_01/volume_group:
-      value: intel_p5800x_01
-    intel_p5800x_01/volume_backend_name:
-      value: ceph-db-1
+    stripe-ultra/volume_group:
+      value: stripe-ultra
+    stripeultra/volume_backend_name:
+      value: ultra
 
