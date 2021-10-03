@@ -1,24 +1,46 @@
-dcib:                                                                                                     
+dcib:
   hosts:
     localhost:
   vars:
     # 20t based on a 10:1 ratio of physical to logical dedupe/compresison
     # source: https://bit.ly/vdo-logical-size-recommendation
-    vdocfg:
-      "stripe0-vdo":
-        pe_size: 32
-        virt_size: 20t
+    vdocfg:       
+      "stripe-vdo":    
+        pe_size: 32       
+        virt_size: 20t    
         vg: "samsung_980p"
-        device:  
-          - /dev/samsung_980p/stripe0
+        device:        
+          - /dev/samsung_980p/980p-stripe0
+                          
+    # other nested auxiliary vgs
+    auxvgs:            
+      "stripe-performance":
+        pe_size: 32       
+        vg: "samsung_980p"
+        device:        
+          - /dev/samsung_980p/980p-stripe1
+      "stripe-ultra":     
+        pe_size: 32
+        vg: "intel_p5800x"
+        device:           
+          - /dev/intel_p5800x/p5800x-stripe0
 
-    # Create the 8-way stripe for the VDO backing store
-    lvcfg:
-      "stripe0":    
+    # Create the 8-way stripe for the VDO backing store and performance disk
+    # Create a 2-way stripe for the ultra disk
+    lvcfg:                   
+      "980p-stripe0":
         vg: "samsung_980p"
         opts: "-i 8 -I 4k"
-        size: 2t          
-        
+        size: "2t"
+      "980p-stripe1":
+        vg: "samsung_980p"
+        opts: "-i 8 -I 4k"
+        size: "100%FREE"
+      "p5800x-stripe0":
+        vg: "intel_p5800x"
+        opts: "-i 2 -I 4k"
+        size: "100%FREE"
+
     # Use device WWNs as they are consistent and will survive
     # the m.2 carrier being shuffled
     vgcfg:       
@@ -45,7 +67,7 @@ dcib:
         device:        
           - /dev/disk/by-id/nvme-eui.01000000000000005cd2e41f893b5351
           - /dev/disk/by-id/nvme-eui.01000000000000005cd2e49227155351
-                                                                               
+
     cephvols:          
       "ceph-osd-0":       
         vg: "samsung_983e"
