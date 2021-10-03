@@ -1,5 +1,5 @@
 # Override default variables by putting them in this file
-standalone_host: 46.246.26.14
+standalone_host: <public ip>
 # since this is an AIO deployment, lets take advantage of large mtu similar to loopback
 # this feature is not merged into the main dev-install distro (yet)
 dummy_mtu: 65536
