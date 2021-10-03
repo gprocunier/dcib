@@ -3,5 +3,5 @@
 ![](https://raw.githubusercontent.com/gprocunier/dcib/main/ansible/disk_prep/storage_layout.png)
 
 # The process
-![](./process.svg)
+![](./the_process.svg)
 
