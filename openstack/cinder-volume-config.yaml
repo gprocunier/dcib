@@ -1,0 +1,158 @@
+heat_template_version: rocky
+description: >
+  Initialize the following volume types and qos specs
+
+resources:
+
+  # define the cinder volume types and associate them
+  # to the different backends
+
+  stripe-vdo:
+    type: OS::Cinder::VolumeType
+    properties:
+      name: stripe-vdo
+      description: 'vdo backed boot volumes'
+      is_public: true
+      metadata:
+        volume_backend_name: 'vdo'
+
+  stripe-performance:
+    type: OS::Cinder::VolumeType
+    properties:
+      name: stripe-performance
+      description: '8 way Samsung 980p nvme'
+      is_public: true
+      metadata:
+        volume_backend_name: 'stripe-performance'
+
+  stripe-ultra:
+    type: OS::Cinder::VolumeType
+    properties:
+      name: stripe-ultra
+      description: '2 way Intel p5800x Optane'
+      is_public: true
+      metadata:
+        volume_backend_name: 'stripe-ultra'
+
+
+  # the vdo storage pool is an 8 way 256gb stripe on eight Samsung 980p
+  # nvmes.  It is meant to host the boot volumes for the instances.  We 
+  # are factoring an average boot volume size of 40gb
+  #
+  # The 2tb stripe is attached to a VDO device providing inline de-dupe
+  # and compression at a ratio of 10:1 for OS/container storage.
+  #
+  # Due to the nature of the data on these volumes and the inhearent
+  # overhead associated with VDO we expect a significant performance
+  # tradeoff for having 20tb usable space
+  #
+  # 4 IO/s x 1gb x 40 = 160 IO/s by boot volume
+  # 3.125 MiB x 1gb x 40 = 125MiB/s by boot volume
+  #
+  qos-vdo-by-size:
+    type: OS::Cinder::QoSSpecs
+    properties:
+      name: qos-vdo-by-size
+      specs:
+        "consumer": "front-end"
+        "total_iops_sec_per_gb": "4"
+        "total_bytes_sec_per_gb": "3276800"
+  
+  # The performance pool consists of the bottom half of the 8-way 
+  # Samsung 980p stripe and is approximately 5.2tb in size.  This pool
+  # averages 2 million IO/s and 8 GB/s throughput and we are going to 
+  # plan for at max 64 80gb volumes usable in this pool.  Each volume 
+  # should be capable of 32768 iops and be able to sustain 128MB/s @ 4k
+  # QD1.  We will also allow for burst capability of up to 512 MB/s
+  
+  qos-performance-by-type:
+    type: OS::Cinder::QoSSpecs
+    properties:
+      name: qos-performance
+      specs:
+        "consumer": "front-end"
+        "total_iops_sec": "32768"
+        "total_bytes_sec": "134217728"
+        "total_bytes_sec_max": "536870912"
+
+  # the ultra pool averages 2.8 million IO/s and 11GB/s throughput
+  # given that this is an dual optane p5800x stripe I have not been
+  # able to properly saturate the IO/s
+  #
+  # .. its really quick ..
+  #
+  # Sadly its only 1tb usable space given that we use a small portion
+  # of each drive to at as the WAL and DB for the ceph storage
+  #
+  # Throughput seems consistent so for the time being I am going to 
+  # plan for 32 32gb volumes from a throughput pov which works out to 
+  # 327 MB/s.  I will allow for a burst of 1GB/s @ 4k.
+  #
+  qos-ultra-by-type:
+    type: OS::Cinder::QoSSpecs
+    properties:
+      name: qos-ultra
+      specs:
+        "consumer": "front-end"
+        "total_iops_sec": "262144"
+        "total_bytes_sec": "343735795"
+        "total_bytes_sec_max": "1073741824"
+
+  # the ceph pool is 4 Samsung 983e cluster split into 8 OSDs
+  # The wal and db are disaggregated onto a portion of the intel 
+  # p5800x optanes.
+  #
+  # This is a replicated pool so each write has a couple copies.
+  # On average we see about 550 MB/s replicated writes with 140k
+  # IO/s @ 4k. And about double that on reads.
+  #
+  # There are 7TB usable in the pool, of which we will factor 5tb
+  # for general purpose images. (2tb for other things like manila/rgw).
+  #
+  # 5tb broken into 50 128gb volumes
+  # Due to the replication read and write ios need to be tiered
+  # differently since writes are 2x more expensive than reads.
+
+  qos-ceph-by-size: 
+    type: OS::Cinder::QoSSpecs
+    properties:
+      name: qos-ceph
+      specs:
+        "consumer": "front-end"
+        "read_iops_sec_per_gb": "43"
+        "write_iops_sec_per_gb": "21"
+        "write_bytes_sec_per_gb": "1048576"
+        "read_bytes_sec_per_gb": "2097152"
+
+  qos-attach-vdo:
+    type: OS::Cinder::QoSAssociation
+    properties:
+      qos_specs:
+        get_resource: qos-vdo-by-size
+      volume_types:
+        - { get_resource: stripe-vdo }
+
+  qos-attach-performance:
+    type: OS::Cinder::QoSAssociation
+    properties:
+      qos_specs:
+        get_resource: qos-performance-by-type
+      volume_types:
+        - { get_resource: stripe-performance }
+
+  qos-attach-ultra:
+    type: OS::Cinder::QoSAssociation
+    properties:
+      qos_specs:
+        get_resource: qos-ultra-by-type
+      volume_types:
+        - { get_resource: stripe-ultra }
+
+  qos-attach-ceph:
+    type: OS::Cinder::QoSAssociation
+    properties:
+      qos_specs:
+        get_resource: qos-ceph-by-size
+      volume_types:
+        - tripleo
+
