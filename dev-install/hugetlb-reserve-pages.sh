@@ -20,13 +20,13 @@ done
 if [[ -f /etc/sysconfig/hugepages ]]
 then
   source /etc/sysconfig/hugepages
-  # evenly distribute huge pages across all the numa domains
+
   if [[ ! -z $NUM_HUGEPAGES ]]
   then
     hugepage_division=$[NUM_HUGEPAGES / node_count]
     for node in ${nodes_path%\/}/node*
     do
-      reserve_pages $hugepage_division ${node}
+      reserve_pages $hugepage_division ${node#$nodes_path}
     done
   fi
 fi
