@@ -1,0 +1,245 @@
+heat_template_version: rocky
+description: >
+  Initialize the following compute flavors
+
+resources:
+
+  # define the nova compute types
+
+  # The Epyc Milan 75F3 has a maxclock of 4000 Mhz
+  #
+  # dedicated priority = 100% CPU time (1024 shares - not used)
+  # gold priority      =  50% CPU time (512 Shares - 2000 MHz)
+  # silver priority    =  30% CPU Time (308 Shares - 1200 MHz)
+  # bronze priority    =  20% CPU time (204 Shares - 800 MHz)
+  #
+  # shares gaurantee speeds during contention, if there is no
+  # contention the instances run at normal clock speed
+  
+  
+
+  flavor-g1.small:
+    type: OS::Nova::Flavor
+    properties:
+      name: g1.small
+      disk: 40
+      ram: 2048
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 512
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+        # quota:cpu_peroid: int
+        # quota:cpu_quota: int
+        
+  flavor-g1.medium:
+    type: OS::Nova::Flavor
+    properties:
+      name: g1.medium
+      disk: 40
+      ram: 4096
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 512
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-g1.large:
+    type: OS::Nova::Flavor
+    properties:
+      name: g1.large
+      disk: 40
+      ram: 8192
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 512
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-g1.xlarge:
+    type: OS::Nova::Flavor
+    properties:
+      name: g1.xlarge
+      disk: 40
+      ram: 16384
+      vcpus: 4
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 512
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-s1.small:
+    type: OS::Nova::Flavor
+    properties:
+      name: s1.small
+      disk: 40
+      ram: 2048
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 308
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+        # quota:cpu_peroid: int
+        # quota:cpu_quota: int
+        
+  flavor-s1.medium:
+    type: OS::Nova::Flavor
+    properties:
+      name: s1.medium
+      disk: 40
+      ram: 4096
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 308
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-s1.large:
+    type: OS::Nova::Flavor
+    properties:
+      name: s1.large
+      disk: 40
+      ram: 8192
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 308
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-s1.xlarge:
+    type: OS::Nova::Flavor
+    properties:
+      name: s1.xlarge
+      disk: 40
+      ram: 16384
+      vcpus: 4
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 308
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-b1.small:
+    type: OS::Nova::Flavor
+    properties:
+      name: b1.small
+      disk: 40
+      ram: 2048
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 204
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+        # quota:cpu_peroid: int
+        # quota:cpu_quota: int
+        
+  flavor-b1.medium:
+    type: OS::Nova::Flavor
+    properties:
+      name: b1.medium
+      disk: 40
+      ram: 4096
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 204
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-b1.large:
+    type: OS::Nova::Flavor
+    properties:
+      name: b1.large
+      disk: 40
+      ram: 8192
+      vcpus: 2
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 204
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-b1.xlarge:
+    type: OS::Nova::Flavor
+    properties:
+      name: b1.xlarge
+      disk: 40
+      ram: 16384
+      vcpus: 4
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 204
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
