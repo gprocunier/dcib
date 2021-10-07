@@ -1,26 +1,24 @@
 #!/bin/sh
 # 
-# example /etc/sysconfig/hugepages that assigns 32 1gb huge pages to numa
-# domain 4-15.  This is meant to be used in conjunction with isolcpus / nova
-# cpu share groups for isolating vm workloads from the os/cloud internals.
-# if NODE_MAP is not defined/populated it will try and divide NUM_HUGEPAGES
-# evenly across all numa domains.
+# example /etc/sysconfig/hugepages that assigns 40 1gb huge pages to numa
+# domain 3-7 (socket0) and domain 11-15 (socket1).  This is meant to be used 
+# in conjunction with isolcpus / nova cpu share groups for isolating vm workloads 
+# from the os/cloud internals.  If NODE_MAP is not defined/populated it will 
+# try and divide NUM_HUGEPAGES evenly across all numa domains.
 # 
 # ---------->8----------
-# NUM_HUGEPAGES=384
+# NUM_HUGEPAGES=400
 # declare -a NODE_MAP
-# NODE_MAP[4]=32
-# NODE_MAP[5]=32
-# NODE_MAP[6]=32
-# NODE_MAP[7]=32
-# NODE_MAP[8]=32
-# NODE_MAP[9]=32
-# NODE_MAP[10]=32
-# NODE_MAP[11]=32
-# NODE_MAP[12]=32
-# NODE_MAP[13]=32
-# NODE_MAP[14]=32
-# NODE_MAP[15]=32
+# NODE_MAP[3]=40
+# NODE_MAP[4]=40
+# NODE_MAP[5]=40
+# NODE_MAP[6]=40
+# NODE_MAP[7]=40
+# NODE_MAP[11]=40
+# NODE_MAP[12]=40
+# NODE_MAP[13]=40
+# NODE_MAP[14]=40
+# NODE_MAP[15]=40
 # ---------->8----------
 
 nodes_path=/sys/devices/system/node/
