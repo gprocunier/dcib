@@ -16,6 +16,13 @@ resources:
       network_id:
         get_param: [ config_data, workload_network ]
 
+  mimepayload:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+        - config:
+            get_resource: nodeconfig
+
   nodeconfig:
     type: OS::Heat::SoftwareConfig
     properties:
