@@ -17,7 +17,7 @@ parameter_defaults:
     workload_network:
       - 7d5c26b4-9419-4a66-acf0-7723c28a27e7
     workload_subnets:
-      - subnet_id: 7d5c26b4-9419-4a66-acf0-7723c28a27e7
+      - subnet_id: 5a2e5dbe-9d58-4b46-bdc4-232f7d2ee108
     # workload_sg: Default
     workload_sg:
       - 92b3df14-2e18-49c9-8aa9-d6df89d319cf 
