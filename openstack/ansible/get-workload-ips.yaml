@@ -1,0 +1,31 @@
+---
+- hosts: all
+  connection: local
+  no_log: true
+  tasks:
+    - os_server_info:
+        auth:
+          auth_url: "{{ lookup('env', 'OS_AUTH_URL') }}"
+          username: "{{ lookup('env', 'OS_USERNAME') }}"
+          password: "{{ lookup('env', 'OS_PASSWORD') }}"
+          project_name:  "{{ lookup('env', 'OS_PROJECT_NAME') }}"
+        validate_certs: False
+        cloud: standalone
+        server: "*-workload-*" 
+        # filters:
+        #vm_state: active
+      register: result
+    - set_fact:
+        servers: "{{ servers | default([]) + [ item.private_v4 ] }}"
+      with_items:
+        - "{{ result.openstack_servers }}"
+    - copy:
+        dest: ./instance-inventory.yaml
+        content: |
+          all:
+            hosts:
+          {% for ip in servers %}
+          {{ ip | indent(width=4, indentfirst=True) }}:
+          {% endfor %}
+
+      with_items: "{{ servers }}"
