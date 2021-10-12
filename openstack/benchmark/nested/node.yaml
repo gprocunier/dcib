@@ -1,0 +1,46 @@
+heat_template_version: rocky
+  
+parameters:
+  config_data:
+    type: json
+    default: {}
+  node_bridge:
+    type: json
+    default: {}
+
+resources:
+
+  my_instance_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id:
+        get_param: [ config_data, workload_network ]
+
+  nodeconfig:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: ungrouped
+      inputs:
+      outputs:
+        - name: deployment-output
+      config:
+        get_param: [ node_bridge, cloud_init ]
+
+  my_instance:
+    type: OS::Nova::Server
+    depends_on: my_instance_port
+    depends_on: mimepayload
+    properties:
+      name:
+        get_param: [ node_bridge, guest_name ]
+      image:
+        get_param: [ config_data, os_image ]
+      flavor:
+        get_param: [ config_data, flavor ]
+      key_name:
+        get_param: [ config_data, ssh_keypair ]
+      networks:
+        get_resource: my_instance_port
+      user_data_format: SOFTWARE_CONFIG
+      user_data:
+        get_resource: mimepayload
