@@ -1,0 +1,17 @@
+parameter_defaults:
+  config_data:
+    deploy_count:
+      gold_server_count: 10
+      silver_server_count: 10
+      bronze_server_count: 10
+
+    heat_node: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/node.yaml'
+    ssh_keypair: 'bench-key'
+    # os_image: 'CentOS-Stream-GenericCloud-8-20210603.0.x86_64'
+    os_image: a2111044-2ca0-467a-b45c-b93158c72f6f
+    # workload_network: greg-default
+    workload_network: 7d5c26b4-9419-4a66-acf0-7723c28a27e7
+    # workload_sg: Default
+    workload_sg: 92b3df14-2e18-49c9-8aa9-d6df89d319cf 
+
+
