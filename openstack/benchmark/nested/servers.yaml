@@ -1,7 +1,4 @@
 heat_template_version: rocky
-description: >
-  Stand up a number of instances in different priority bands to test oversubscription
-  policies.
   
 parameters:
   config_data:
@@ -31,6 +28,60 @@ resources:
               get_param: [ config_data, os_image ]
             flavor:
               get_param: [ config_data, gold_flavor ]
+            fixed_ips:
+              get_param: [ config_data, workload_subnets ]
+            private_net_id:
+              get_param: [ config_data, workload_network ]
+            security_groups:
+              get_param: [ config_data, workload_sg ]
+            cloud_init:
+              get_file: https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/cloud-init/node-config-centos.sh
+
+  silver_server_rg:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count:
+        get_param: [ config_data, deploy_count, silver_server_count ]
+      resource_def:
+        type:
+          get_param: [ config_data, heat_node ]
+        properties:
+          node_bridge:
+            NodeIndex: "%index%"
+            guest_name: "silver-workload-%index%"
+            key_name:
+              get_param: [ config_data, ssh_keypair ]
+            image:
+              get_param: [ config_data, os_image ]
+            flavor:
+              get_param: [ config_data, silver_flavor ]
+            fixed_ips:
+              get_param: [ config_data, workload_subnets ]
+            private_net_id:
+              get_param: [ config_data, workload_network ]
+            security_groups:
+              get_param: [ config_data, workload_sg ]
+            cloud_init:
+              get_file: https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/cloud-init/node-config-centos.sh
+
+  bronze_server_rg:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count:
+        get_param: [ config_data, deploy_count, bronze_server_count ]
+      resource_def:
+        type:
+          get_param: [ config_data, heat_node ]
+        properties:
+          node_bridge:
+            NodeIndex: "%index%"
+            guest_name: "bronze-workload-%index%"
+            key_name:
+              get_param: [ config_data, ssh_keypair ]
+            image:
+              get_param: [ config_data, os_image ]
+            flavor:
+              get_param: [ config_data, bronze_flavor ]
             fixed_ips:
               get_param: [ config_data, workload_subnets ]
             private_net_id:
