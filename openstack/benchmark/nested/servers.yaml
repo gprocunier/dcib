@@ -1,0 +1,39 @@
+heat_template_version: rocky
+description: >
+  Stand up a number of instances in different priority bands to test oversubscription
+  policies.
+  
+parameters:
+  config_data:
+    type: json
+    default: {}
+  node_bridge:
+    type: json
+    default: {}
+
+resources:
+
+  gold_server_rg:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count:
+        get_param: [ config_data, deploy_count, gold_server_count ]
+      resource_def:
+        type:
+          get_param: [ config_data, heat_node ]
+        properties:
+          node_bridge:
+            NodeIndex: "%index%"
+            guest_name: "gold-workload-%index%"
+            key_name:
+              get_param: [ config_data, ssh_keypair ]
+            image:
+              get_param: [ config_data, os_image ]
+            flavor:
+              get_param: [ config_data, flavor ]
+            private_net_id:
+              get_param: [ config_data, workload_network ]
+            security_group:
+              get_param: [ config_data, workload_sg ]
+            cloud_init:
+              get_file: https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/cloud-init/node-config-centos.sh
