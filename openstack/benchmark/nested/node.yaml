@@ -38,21 +38,21 @@ resources:
         - config:
             get_resource: nodeconfig
 
-  my_instance:
-    type: OS::Nova::Server
-    depends_on: my_instance_port
-    depends_on: mimepayload
-    properties:
-      name:
-        get_param: [ node_bridge, guest_name ]
-      image:
-        get_param: [ config_data, os_image ]
-      flavor:
-        get_param: [ node_bridge, flavor ]
-      key_name:
-        get_param: [ config_data, ssh_keypair ]
+#  my_instance:
+#    type: OS::Nova::Server
+#    depends_on: my_instance_port
+#    depends_on: mimepayload
+#    properties:
+#      name:
+#        get_param: [ node_bridge, guest_name ]
+#      image:
+#        get_param: [ config_data, os_image ]
+#      flavor:
+#        get_param: [ node_bridge, flavor ]
+#      key_name:
+#        get_param: [ config_data, ssh_keypair ]
 #      networks:
 #        - { get_resource: my_instance_port }
-      user_data_format: SOFTWARE_CONFIG
-      user_data:
-        get_resource: mimepayload
+#      user_data_format: SOFTWARE_CONFIG
+#      user_data:
+#        get_resource: mimepayload
