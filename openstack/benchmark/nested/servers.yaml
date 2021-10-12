@@ -31,6 +31,8 @@ resources:
               get_param: [ config_data, os_image ]
             flavor:
               get_param: [ config_data, gold_flavor ]
+            fixed_ips:
+              get_param: [ config_data, workload_subnets ]
             private_net_id:
               get_param: [ config_data, workload_network ]
             security_group:
