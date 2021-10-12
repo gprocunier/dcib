@@ -1,5 +1,9 @@
 heat_template_version: rocky
 
+description: >
+  Stand up a number of instances in different priority bands to test oversubscription
+  policies.  Among other things...
+
 parameters:
   config_data:
     type: json
