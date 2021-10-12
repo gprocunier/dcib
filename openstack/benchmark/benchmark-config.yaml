@@ -6,8 +6,8 @@ parameter_defaults:
       bronze_server_count: 10
 
     gold_flavor: g1.2xlarge
-    silver_flavor: g1.2xlarge
-    bronze_flavor: g1.2xlarge
+    silver_flavor: s1.2xlarge
+    bronze_flavor: b1.2xlarge
    
     heat_node: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/node.yaml'
     ssh_keypair: 'bench-key'
