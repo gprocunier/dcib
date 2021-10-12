@@ -14,8 +14,7 @@ parameter_defaults:
     # os_image: 'CentOS-Stream-GenericCloud-8-20210603.0.x86_64'
     os_image: a2111044-2ca0-467a-b45c-b93158c72f6f
     # workload_network: greg-default
-    workload_network:
-      - 7d5c26b4-9419-4a66-acf0-7723c28a27e7
+    workload_network: 7d5c26b4-9419-4a66-acf0-7723c28a27e7
     workload_subnets:
       - subnet_id: 5a2e5dbe-9d58-4b46-bdc4-232f7d2ee108
     # workload_sg: Default
