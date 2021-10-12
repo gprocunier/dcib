@@ -11,7 +11,7 @@ resources:
   servers:
      type: OS::Heat::Stack 
      properties:
-       template: { get_file: '/home/greg/heat-templates/benchmark/nested/servers.yaml' }
+       template: { get_file: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/servers.yaml' }
        parameters:
            
 outputs:
