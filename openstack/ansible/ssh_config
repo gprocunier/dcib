@@ -1,0 +1,12 @@
+Host 172.16.30.*
+  ProxyCommand ssh -W %h:%p 192.168.1.49
+  IdentityFile ~/.ssh/bench-key.pem
+  StrictHostKeyChecking no
+
+Host 192.168.1.49
+  User centos
+  StrictHostKeyChecking no
+  IdentityFile ~/.ssh/bench-key.pem
+  ControlMaster auto
+  ControlPath ~/.ssh/ansible-%r@%h:%p
+  ControlPersist 5m
