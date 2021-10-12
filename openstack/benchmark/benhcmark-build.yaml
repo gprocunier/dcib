@@ -1,0 +1,17 @@
+heat_template_version: rocky
+
+parameters:
+  config_data:
+    type: json
+    default: {}
+
+resources:
+
+# Stand up instances
+  servers:
+     type: OS::Heat::Stack 
+     properties:
+       template: { get_file: '/home/greg/heat-templates/benchmark/nested/servers.yaml' }
+       parameters:
+           
+outputs:
