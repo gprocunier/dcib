@@ -48,7 +48,7 @@ resources:
       key_name:
         get_param: [ config_data, ssh_keypair ]
       networks:
-        get_resource: my_instance_port
+        - { get_resource: my_instance_port }
       user_data_format: SOFTWARE_CONFIG
       user_data:
         get_resource: mimepayload
