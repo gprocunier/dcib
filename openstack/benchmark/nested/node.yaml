@@ -10,15 +10,15 @@ parameters:
 
 resources:
 
-  my_instance_port:
-    type: OS::Neutron::Port
-    properties:
-      network_id:
-        get_param: [ node_bridge, private_net_id  ]
-      fixed_ips:
-        get_param: [ node_bridge, fixed_ips ]
-      security_groups:
-        get_param: [ node_bridge, security_groups ]
+#  my_instance_port:
+#    type: OS::Neutron::Port
+#    properties:
+#      network_id:
+#        get_param: [ node_bridge, private_net_id  ]
+#      fixed_ips:
+#        get_param: [ node_bridge, fixed_ips ]
+#      security_groups:
+#        get_param: [ node_bridge, security_groups ]
 
   nodeconfig:
     type: OS::Heat::SoftwareConfig
