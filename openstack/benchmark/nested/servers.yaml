@@ -30,7 +30,7 @@ resources:
             image:
               get_param: [ config_data, os_image ]
             flavor:
-              get_param: [ config_data, flavor ]
+              get_param: [ config_data, gold_flavor ]
             private_net_id:
               get_param: [ config_data, workload_network ]
             security_group:
