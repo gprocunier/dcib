@@ -16,13 +16,6 @@ resources:
       network_id:
         get_param: [ config_data, workload_network ]
 
-  mimepayload:
-    type: OS::Heat::MultipartMime
-    properties:
-      parts:
-        - config:
-            get_resource: nodeconfig
-
   nodeconfig:
     type: OS::Heat::SoftwareConfig
     properties:
@@ -32,6 +25,14 @@ resources:
         - name: deployment-output
       config:
         get_param: [ node_bridge, cloud_init ]
+
+  mimepayload:
+    type: OS::Heat::MultipartMime
+    depends_on: nodeconfig
+    properties:
+      parts:
+        - config:
+            get_resource: nodeconfig
 
   my_instance:
     type: OS::Nova::Server
