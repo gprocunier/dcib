@@ -1,7 +1,6 @@
 ---
 - hosts: all
   connection: local
-  no_log: true
   tasks:
     - os_server_info:
         auth:
@@ -11,14 +10,42 @@
           project_name:  "{{ lookup('env', 'OS_PROJECT_NAME') }}"
         validate_certs: False
         cloud: standalone
-        server: "*-workload-*" 
-        # filters:
-        #vm_state: active
       register: result
+      no_log: true
+ 
     - set_fact:
-        servers: "{{ servers | default([]) + [ item.private_v4 ] }}"
-      with_items:
-        - "{{ result.openstack_servers }}"
+        gold: "{{ gold | default([]) + [ item | from_json | json_query(jq) ] }}"
+      vars:
+        jq: "[?contains(vm_state, 'active') && contains(name, 'gold')].private_v4"
+      with_items: "{{ result.openstack_servers | to_json }}"
+      no_log: true
+ 
+    - set_fact:
+        silver: "{{ silver | default([]) + [ item | from_json | json_query(jq) ] }}"
+      vars:
+        jq: "[?contains(vm_state, 'active') && contains(name, 'silver')].private_v4"
+      with_items: "{{ result.openstack_servers | to_json }}"
+      no_log: true
+ 
+    - set_fact:
+        bronze: "{{ bronze | default([]) + [ item | from_json | json_query(jq) ] }}"
+      vars:
+        jq: "[?contains(vm_state, 'active') && contains(name, 'bronze')].private_v4"
+      with_items: "{{ result.openstack_servers | to_json }}"
+      no_log: true
+ 
+    - set_fact:
+        gold: "{{ gold | flatten }}"
+ 
+    - set_fact:
+        silver: "{{ silver | flatten }}"
+ 
+    - set_fact:
+        bronze: "{{ bronze | flatten }}"
+ 
+    - set_fact:
+        servers: "{{ gold + silver + bronze | default([]) }}"
+
     - copy:
         dest: ./instance-inventory.yaml
         content: |
@@ -27,5 +54,21 @@
           {% for ip in servers %}
           {{ ip | indent(width=4, indentfirst=True) }}:
           {% endfor %}
-
-      with_items: "{{ servers }}"
+ 
+          gold:
+            hosts:
+          {% for ip in gold %}
+          {{ ip | indent(width=4, indentfirst=True) }}:
+          {% endfor %}
+ 
+          silver:
+            hosts:
+          {% for ip in silver %}
+          {{ ip | indent(width=4, indentfirst=True) }}:
+          {% endfor %}
+ 
+          bronze:
+            hosts:
+          {% for ip in bronze %}
+          {{ ip | indent(width=4, indentfirst=True) }}:
+          {% endfor %}
