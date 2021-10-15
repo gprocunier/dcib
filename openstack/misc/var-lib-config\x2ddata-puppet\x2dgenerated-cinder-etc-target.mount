@@ -1,6 +1,9 @@
 # This is a bind mount unit file for systemd.
 # this file gets placed into /etc/systemd/system and then reload systemd.
 # due to systemd conventions the file name needs to look like this :(
+# You also need to create the following folder as root:
+#
+#   /var/lib/config-data/puppet-generated/cinder/etc/target
 #
 # This addresses a bug I found with the current cinder-volume container
 # when using LVM and lio iscsi helper where the iscsi target configuration
