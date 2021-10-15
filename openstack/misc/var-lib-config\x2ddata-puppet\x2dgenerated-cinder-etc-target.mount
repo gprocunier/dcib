@@ -4,7 +4,9 @@
 #
 # This addresses a bug I found with the current cinder-volume container
 # when using LVM and lio iscsi helper where the iscsi target configuration
-# was not being saved to a persistent volume.
+# was not being saved to a persistent volume.  Essentially if you modify/patch
+# the cinder-volume container or reboot the system, your iscsi target config 
+# wont persist!
 #
 # this is a bit of a hack to get this working, the most correct fix
 # is to update the cinder-volume container image to bind mount /etc/target
