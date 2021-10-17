@@ -20,4 +20,14 @@ resources:
         get_param: [ config_data, file_share_size_gb ]
       access_rules:
         get_param: [ config_data, file_share_acl ]
-
+        
+outputs:
+  export_location:
+    value:
+      get_attr: [ share, show, export_locations ]
+  status:
+    value:
+      get_attr: [ share, show, status ]
+  details:
+    value:
+      get_attr: [ share, show, show ]
