@@ -33,6 +33,7 @@ resources:
             get_param: [ node_bridge, cloudinit ]
           params:
             ___NFS_SHARE___:
+              get_param: [ node_bridge, share_location ]
 
 
   mimepayload:
