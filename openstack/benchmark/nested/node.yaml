@@ -44,15 +44,28 @@ resources:
         - config:
             get_resource: nodeconfig
 
+  boot_volume:
+    type: OS::Cinder::Volume
+    properties:
+      size: 40
+      image:
+        get_param: [ config_data, os_image ]
+      volume_type: "stripe-vdo"
+
   my_instance:
     type: OS::Nova::Server
     depends_on: my_instance_port
     depends_on: mimepayload
+    depends_on: boot_volume
     properties:
       name:
         get_param: [ node_bridge, guest_name ]
-      image:
-        get_param: [ config_data, os_image ]
+        block_device_mapping:
+         - device_name: sda
+           volume_id: { get_resource: boot_volume }
+           delete_on_termination: false
+#      image:
+#        get_param: [ config_data, os_image ]
       flavor:
         get_param: [ node_bridge, flavor ]
       key_name:
