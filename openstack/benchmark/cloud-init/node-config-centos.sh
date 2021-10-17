@@ -21,3 +21,8 @@ net.core.default_qdisc = fq
 
 _E_O_F_
 sysctl -p
+
+cat <<_E_O_F_>>/etc/fstab
+___NFS_SHARE___ /mnt  nfs defaults,_netdev  0 0
+_E_O_F_
+
