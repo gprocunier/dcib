@@ -1,9 +1,9 @@
 parameter_defaults:
   config_data:
     deploy_count:
-      gold_server_count: 10
-      silver_server_count: 10
-      bronze_server_count: 10
+      gold_server_count: 1
+      silver_server_count: 1
+      bronze_server_count: 1
 
     gold_flavor: g1.2xlarge
     silver_flavor: s1.2xlarge
