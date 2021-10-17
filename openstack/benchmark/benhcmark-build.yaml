@@ -11,6 +11,13 @@ parameters:
 
 resources:
 
+# Stand up file shares
+  shares:
+     type: OS::Heat::Stack 
+     properties:
+       template: { get_file: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/file-shares.yaml' }
+       parameters:
+
 # Stand up instances
   servers:
      type: OS::Heat::Stack 
