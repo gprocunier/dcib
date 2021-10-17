@@ -16,7 +16,8 @@ resources:
       description: "benchmark telemetry collection share"
       is_public: true
       share_protocol: "NFS"
-      size: [ config_data, file_share_size_gb ]
+      size:
+        get_param: [ config_data, file_share_size_gb ]
       access_rules:
         get_param: [ config_data, file_share_acl ]
 
