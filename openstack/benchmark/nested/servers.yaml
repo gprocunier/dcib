@@ -27,10 +27,10 @@ resources:
             guest_name: "gold-workload-%index%"
             key_name:
               get_param: [ config_data, ssh_keypair ]
-            boot_volume_size:
-              get_param: [ config_data, boot_volume_size ]
-            boot_volume_type:
-              get_param: [ config_data, boot_volume_type ]
+#            boot_volume_size:
+#              get_param: [ config_data, boot_volume_size ]
+#            boot_volume_type:
+#              get_param: [ config_data, boot_volume_type ]
             image:
               get_param: [ config_data, os_image ]
             flavor:
