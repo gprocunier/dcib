@@ -23,9 +23,9 @@ resources:
       size:
         get_param: volume_size
       description:
-        get_param: volume_description
+        list_join: ['', [ {get_param: volume_description}, ' data volume']]
       volume_type:
-        get_param: voltype
+        get_param: volume_type
 
   attachment:
     type: OS::Cinder::VolumeAttachment
