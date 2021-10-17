@@ -37,7 +37,7 @@ resources:
               get_param: [ config_data, workload_network ]
             security_groups:
               get_param: [ config_data, workload_sg ]
-            share_info:
+            share_location:
               get_param: [ stack_bridge, share_location ]
             cloud_init:
               get_file: https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/cloud-init/node-config-centos.sh
