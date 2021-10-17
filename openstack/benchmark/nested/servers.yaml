@@ -20,7 +20,7 @@ resources:
         get_param: [ config_data, deploy_count, gold_server_count ]
       resource_def:
         type:
-          get_param: [ config_data, heat_node ]
+          get_param: [ config_data, templates, node ]
         properties:
           node_bridge:
             NodeIndex: "%index%"
