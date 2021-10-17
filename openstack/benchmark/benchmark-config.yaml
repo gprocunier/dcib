@@ -8,6 +8,9 @@ parameter_defaults:
     gold_flavor: g1.2xlarge
     silver_flavor: s1.2xlarge
     bronze_flavor: b1.2xlarge
+    
+    boot_volume_size: 40
+    boot_volume_type: "stripe-vdo"
    
     heat_node: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/node.yaml'
     ssh_keypair: 'bench-key'
