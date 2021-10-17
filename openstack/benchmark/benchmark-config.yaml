@@ -1,5 +1,10 @@
 parameter_defaults:
   config_data:
+  
+    templates:
+      node: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/node.yaml'
+      extra_volumes: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/extra_volumes.yaml
+      
     deploy_count:
       gold_server_count: 10
       silver_server_count: 10
@@ -46,7 +51,6 @@ parameter_defaults:
         - volume_type: stripe-vdo
           size: 32
 
-    heat_node: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/node.yaml'
     ssh_keypair: 'bench-key'
     # os_image: 'CentOS-Stream-GenericCloud-8-20210603.0.x86_64'
     os_image: a2111044-2ca0-467a-b45c-b93158c72f6f
