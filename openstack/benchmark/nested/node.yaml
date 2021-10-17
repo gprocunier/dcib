@@ -62,10 +62,10 @@ resources:
     properties:
       name:
         get_param: [ node_bridge, guest_name ]
-#      block_device_mapping:
-#         - device_name: sda
-#           volume_id: { get_resource: boot_volume }
-#           delete_on_termination: true
+      block_device_mapping:
+         - device_name: sda
+           volume_id: { get_resource: boot_volume }
+           delete_on_termination: true
       flavor:
         get_param: [ node_bridge, flavor ]
       key_name:
