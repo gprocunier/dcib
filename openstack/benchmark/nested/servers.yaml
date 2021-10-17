@@ -4,6 +4,9 @@ parameters:
   config_data:
     type: json
     default: {}
+  stack_bridge:
+    type: json
+    default: {}
   node_bridge:
     type: json
     default: {}
@@ -34,6 +37,8 @@ resources:
               get_param: [ config_data, workload_network ]
             security_groups:
               get_param: [ config_data, workload_sg ]
+            share_info:
+              get_param: [ stack_bridge, share_location ]
             cloud_init:
               get_file: https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/cloud-init/node-config-centos.sh
 
