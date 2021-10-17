@@ -1,0 +1,22 @@
+heat_template_version: rocky
+description: >
+  Create NFS file share for instances to write telemetry to.
+  
+parameters:
+  config_data:
+    type: json
+    default: {}
+
+resources:
+
+  share:
+    type: OS::Manila::Share
+    properties:
+      name: "telemetry"
+      description: "benchmark telemetry collection share"
+      is_public: true
+      share_protocol: "NFS"
+      size: [ config_data, file_share_size_gb ]
+      access_rules:
+        get_param: [ config_data, file_share_acl ]
+
