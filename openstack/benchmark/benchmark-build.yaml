@@ -26,6 +26,6 @@ resources:
        parameters:
         stack_bridge:
           share_location:
-            get_attr: [ shares, outputs, export_location ]
+            get_attr: [ shares, outputs, export_location, 0 ]
            
 outputs:
