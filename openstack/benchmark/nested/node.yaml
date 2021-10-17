@@ -47,10 +47,12 @@ resources:
   boot_volume:
     type: OS::Cinder::Volume
     properties:
-      size: 40
+      size:
+        get_param: [ node_bridge, boot_volume_size ]
       image:
-        get_param: [ config_data, os_image ]
-      volume_type: "stripe-vdo"
+        get_param: [ node_bridge, os_image ]
+      volume_type:
+        get_param: [ node_bridge, boot_volume_type ]
 
   my_instance:
     type: OS::Nova::Server
