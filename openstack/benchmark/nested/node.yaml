@@ -8,13 +8,13 @@ parameters:
     type: json
     default: {}
 
-conditions:
-  has_boot_volume_type:
-    not:
-      equals: [ { get_param: [ node_bridge, boot_volume_type ] }, '' ]
-  has_boot_volume_size:
-    not:
-      equals: [ { get_param: [ node_bridge, boot_volume_size ] }, '' ]
+#conditions:
+#  has_boot_volume_type:
+#    not:
+#      equals: [ { get_param: [ node_bridge, boot_volume_type ] }, '' ]
+#  has_boot_volume_size:
+#    not:
+#      equals: [ { get_param: [ node_bridge, boot_volume_size ] }, '' ]
 
 
 resources:
