@@ -19,4 +19,11 @@ parameter_defaults:
       - subnet_id: 5a2e5dbe-9d58-4b46-bdc4-232f7d2ee108
     # workload_sg: Default
     workload_sg:
-      - 92b3df14-2e18-49c9-8aa9-d6df89d319cf 
+      - 92b3df14-2e18-49c9-8aa9-d6df89d319cf
+      
+    # define params for creating a share in manila for collecting telemetry
+    file_share_size_gb: 32
+    file_share_acl:
+      - access_level: "rw"
+        access_type: "ip"
+        access_to: "192.168.1.0/24"
