@@ -53,6 +53,13 @@ resources:
         get_param: [ node_bridge, image ]
       volume_type:
         get_param: [ node_bridge, boot_volume_type ]
+      description:
+        str_replace:
+          template:
+            ___INSTANCE_NAME___ boot volume
+          params:
+            ___INSTANCE_NAME___:
+              get_param: [ node_bridge, guest_name ]
 
   my_instance:
     type: OS::Nova::Server
