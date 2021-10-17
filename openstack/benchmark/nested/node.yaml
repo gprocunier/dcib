@@ -60,12 +60,11 @@ resources:
     properties:
       name:
         get_param: [ node_bridge, guest_name ]
-        block_device_mapping:
-         - device_name: sda
-           volume_id: { get_resource: boot_volume }
-           delete_on_termination: false
-#      image:
-#        get_param: [ config_data, os_image ]
+      block_device_mapping_v2:
+       - device_name: "sda"
+         disk_bus: "scsi"
+         volume_id: { get_resource: boot_volume }
+         delete_on_termination: false
       flavor:
         get_param: [ node_bridge, flavor ]
       key_name:
