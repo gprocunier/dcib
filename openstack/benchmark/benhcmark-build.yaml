@@ -24,5 +24,8 @@ resources:
      properties:
        template: { get_file: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/servers.yaml' }
        parameters:
+        stack_bridge:
+          share_location:
+            get_attr: [ shares, outputs, export_location ]
            
 outputs:
