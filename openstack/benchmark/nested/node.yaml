@@ -94,11 +94,11 @@ resources:
           params:
             ___INSTANCE_NAME___:
               get_param: [ node_bridge, guest_name ]
-      volume_type: "stripe-vdo"
-#        if:
-#          - "has_boot_volume_type"
-#          - { get_param: [ node_bridge, boot_volume_type ] }
-#          - tripleo
+      volume_type:
+        if:
+          - "has_boot_volume_type"
+          - { get_param: [ node_bridge, boot_volume_type ] }
+          - tripleo
 
 
 
