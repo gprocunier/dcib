@@ -55,11 +55,17 @@ resources:
 
   my_instance:
     type: OS::Nova::Server
-    depends_on: my_instance_port
-    depends_on: mimepayload
+    depends_on:
+      - my_instance_port
+      - boot_volume
+      - mimepayload
     properties:
       name:
         get_param: [ node_bridge, guest_name ]
+      block_device_mapping:
+         - device_name: sda
+           volume_id: { get_resource: boot_volume }
+           delete_on_termination: true
       flavor:
         get_param: [ node_bridge, flavor ]
       key_name:
@@ -93,15 +99,6 @@ resources:
           - "has_boot_volume_type"
           - { get_param: [ node_bridge, boot_volume_type ] }
           - tripleo
-          
-  attachment:
-    type: OS::Cinder::VolumeAttachment
-    depends_on: boot_volume
-    properties:
-      volume_id:
-        get_resource: boot_volume
-      instance_uuid:
-        get_resource: my_instance
 
 
 
