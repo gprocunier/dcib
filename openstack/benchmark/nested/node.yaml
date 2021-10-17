@@ -8,15 +8,6 @@ parameters:
     type: json
     default: {}
 
-conditions:
-  has_boot_volume_type:
-    not:
-      equals: [ { get_param: [ node_bridge, boot_volume_type ] }, '' ]
-  has_boot_volume_size:
-    not:
-      equals: [ { get_param: [ node_bridge, boot_volume_size ] }, '' ]
-
-
 resources:
 
   my_instance_port:
@@ -60,6 +51,8 @@ resources:
     properties:
       name:
         get_param: [ node_bridge, guest_name ]
+      image:
+        get_param: [ config_data, os_image ]
       flavor:
         get_param: [ node_bridge, flavor ]
       key_name:
@@ -69,39 +62,3 @@ resources:
       user_data_format: SOFTWARE_CONFIG
       user_data:
         get_resource: mimepayload
-
-  boot_volume:
-    type: OS::Cinder::Volume
-    depends_on: my_instance
-    properties:
-      image:
-        get_param: [ node_bridge, os_image ]
-      size:
-        if:
-          - "has_boot_volume_size"
-          - { get_param: [ node_bridge, boot_volume_size ] }
-          - 40
-      description:
-        str_replace:
-          template:
-            ___INSTANCE_NAME___ boot volume
-          params:
-            ___INSTANCE_NAME___:
-              get_param: [ node_bridge, guest_name ]
-      volume_type:
-        if:
-          - "has_boot_volume_type"
-          - { get_param: [ node_bridge, boot_volume_type ] }
-          - tripleo
-          
-  attachment:
-    type: OS::Cinder::VolumeAttachment
-    depends_on: boot_volume
-    properties:
-      volume_id:
-        get_resource: boot_volume
-      instance_uuid:
-        get_resource: my_instance
-
-
-
