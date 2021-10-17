@@ -101,7 +101,7 @@ resources:
           instance_id:
             get_resource: my_instance
           volume_size:
-            get_param: [ node_bridge, %index%, size ]
+            get_param: [ node_bridge, index, size ]
           volume_type:
             get_param: [ node_bridge, %index%, volume_type ]
           volume_description:
