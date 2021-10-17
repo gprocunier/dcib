@@ -1,6 +1,8 @@
 ---
 - hosts: all
   connection: local
+  vars:
+    user: "centos"
   tasks:
     - os_server_info:
         auth:
@@ -50,24 +52,32 @@
         dest: ./instance-inventory.yaml
         content: |
           all:
+            vars:
+              ansible_ssh_user: {{ user }}
             hosts:
           {% for ip in servers %}
           {{ ip | indent(width=4, indentfirst=True) }}:
           {% endfor %}
  
           gold:
+            vars:
+              ansible_ssh_user: {{ user }}
             hosts:
           {% for ip in gold %}
           {{ ip | indent(width=4, indentfirst=True) }}:
           {% endfor %}
  
           silver:
+            vars:
+              ansible_ssh_user: {{ user }}
             hosts:
           {% for ip in silver %}
           {{ ip | indent(width=4, indentfirst=True) }}:
           {% endfor %}
  
           bronze:
+            vars:
+              ansible_ssh_user: {{ user }}
             hosts:
           {% for ip in bronze %}
           {{ ip | indent(width=4, indentfirst=True) }}:
