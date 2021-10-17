@@ -87,13 +87,13 @@ resources:
           - "has_boot_volume_size"
           - { get_param: [ node_bridge, boot_volume_size ] }
           - 40
-#      description:
-#        str_replace:
-#          template:
-#            ___INSTANCE_NAME___ boot volume
-#          params:
-#            ___INSTANCE_NAME___:
-#              get_param: [ node_bridge, guest_name ]
+      description:
+        str_replace:
+          template:
+            ___INSTANCE_NAME___ boot volume
+          params:
+            ___INSTANCE_NAME___:
+              get_param: [ node_bridge, guest_name ]
       volume_type:
         if:
           - "has_boot_volume_type"
