@@ -18,7 +18,7 @@ parameter_defaults:
     # stripe-vdo         = 2T Raw, 10:1 dedupe @ 20T but benchmark data might not dedupe well
     #                      factor 30x 32G volumes
     extra_volumes:
-      gold_workload:
+      gold:
         - volume_type: stripe-performance
           size: 128
         - volume_type: stripe-ultra
@@ -27,7 +27,7 @@ parameter_defaults:
           size: 128
         - volume_type: stripe-vdo
           size: 32
-      silver_workload:
+      silver:
         - volume_type: stripe-performance
           size: 128
         - volume_type: stripe-ultra
@@ -36,7 +36,7 @@ parameter_defaults:
           size: 128
         - volume_type: stripe-vdo
           size: 32
-      bronze_workload:
+      bronze:
         - volume_type: stripe-performance
           size: 128
         - volume_type: stripe-ultra
