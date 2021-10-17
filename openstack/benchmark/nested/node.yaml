@@ -50,7 +50,7 @@ resources:
       size:
         get_param: [ node_bridge, boot_volume_size ]
       image:
-        get_param: [ node_bridge, os_image ]
+        get_param: [ node_bridge, image ]
       volume_type:
         get_param: [ node_bridge, boot_volume_type ]
 
