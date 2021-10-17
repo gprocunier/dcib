@@ -34,7 +34,7 @@ resources:
             image:
               get_param: [ config_data, os_image ]
             extra_volumes:
-              get_param: [ config_data, gold_volumes ]
+              get_param: [ config_data, gold ]
             flavor:
               get_param: [ config_data, gold_flavor ]
             fixed_ips:
@@ -69,7 +69,7 @@ resources:
             image:
               get_param: [ config_data, os_image ]
             extra_volumes:
-              get_param: [ config_data, silver_volumes ]
+              get_param: [ config_data, silver ]
             flavor:
               get_param: [ config_data, silver_flavor ]
             fixed_ips:
@@ -104,7 +104,7 @@ resources:
             image:
               get_param: [ config_data, os_image ]
             extra_volumes:
-              get_param: [ config_data, bronze_volumes ]
+              get_param: [ config_data, bronze ]
             flavor:
               get_param: [ config_data, bronze_flavor ]
             fixed_ips:
