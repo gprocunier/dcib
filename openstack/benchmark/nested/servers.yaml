@@ -34,7 +34,7 @@ resources:
             image:
               get_param: [ config_data, os_image ]
             extra_volumes:
-              get_param: [ config_data, gold ]
+              get_param: [ config_data, extra_volumes, gold ]
             flavor:
               get_param: [ config_data, gold_flavor ]
             fixed_ips:
