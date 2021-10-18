@@ -23,7 +23,7 @@ resources:
       size:
         get_param: [ extra_volumes, index, volume_size ]
      #description:
-     #   list_join: ['', [ {get_param: [ extra_bridge, volume_description ] }, ' data volume']]
+     #   list_join: ['', [ { get_param: volume_description  }, ' data volume']]
       volume_type:
         get_param: [ extra_volumes, index, volume_type ]
 
