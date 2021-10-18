@@ -23,7 +23,7 @@ resources:
       description: '8 way Samsung 980p nvme'
       is_public: true
       metadata:
-        volume_backend_name: 'stripe-performance'
+        volume_backend_name: 'performance'
 
   stripe-ultra:
     type: OS::Cinder::VolumeType
@@ -32,7 +32,7 @@ resources:
       description: '2 way Intel p5800x Optane'
       is_public: true
       metadata:
-        volume_backend_name: 'stripe-ultra'
+        volume_backend_name: 'ultra'
 
 
   # the vdo storage pool is an 8 way 256gb stripe on eight Samsung 980p
