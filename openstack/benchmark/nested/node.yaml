@@ -7,7 +7,10 @@ parameters:
   node_bridge:
     type: json
     default: {}
-
+  extra_bridge:
+    type: json
+    default: {}
+    
 resources:
 
   my_instance_port:
@@ -98,11 +101,12 @@ resources:
         type:
           get_param: [ config_data, templates, extra_volumes ]
         properties:
-          instance_id:
-            get_resource: my_instance
-          volume_size:
-            get_param: [ node_bridge, index, size ]
-          volume_type:
-            get_param: [ node_bridge, index, volume_type ]
-          volume_description:
-            get_param: [ node_bridge, guest_name ]
+          extra_bridge:
+            instance_id:
+              get_resource: my_instance
+            volume_size:
+              get_param: [ node_bridge, index, size ]
+            volume_type:
+              get_param: [ node_bridge, index, volume_type ]
+            volume_description:
+              get_param: [ node_bridge, guest_name ]
