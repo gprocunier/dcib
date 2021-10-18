@@ -97,16 +97,14 @@ resources:
           expression: $.data.len()
           data:
             get_param: [ node_bridge, extra_volumes ]
-      index_var: ivar
       resource_def:
         type:
           get_param: [ config_data, templates, extra_volumes ]
         properties:
+          index: "%index%"
           instance_id:
             get_resource: my_instance
-          volume_size:
-            get_param: [ node_bridge, extra_volumes, ivar, size ]
-          volume_type:
-            get_param: [ node_bridge, extra_volumes, ivar, volume_type ]
+          extra_volumes:
+            get_param: [ node_bridge, extra_volumes ]
           volume_description:
             get_param: [ node_bridge, guest_name ]
