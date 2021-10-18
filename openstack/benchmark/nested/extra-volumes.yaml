@@ -21,7 +21,7 @@ resources:
     type: OS::Cinder::Volume
     properties:
       size:
-        get_param: [ extra_volumes, { get_param: index }, volume_size ]
+        get_param: [ extra_volumes, { get_param: index }, size ]
      #description:
      #   list_join: ['', [ { get_param: volume_description  }, ' data volume']]
       volume_type:
