@@ -21,6 +21,7 @@ resources:
 
   attachment:
     type: OS::Cinder::VolumeAttachment
+    depends_on: volume
     properties:
       volume_id:
         get_resource: volume
