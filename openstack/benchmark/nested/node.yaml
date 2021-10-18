@@ -109,11 +109,11 @@ resources:
               str_replace:
                 template: ___volume_size___
                 params:
-                  ___volume_size___: { get_param [ node_bridge, ivar, size ] }
+                  ___volume_size___: { get_param [ node_bridge, extra_volumes, ivar, size ] }
             volume_type:
               str_replace:
                 template: ___volume_type___
                 params:
-                  ___volume_type___: { get_param [ node_bridge, ivar, volume_type ] }
+                  ___volume_type___: { get_param [ node_bridge, extra_volumes, ivar, volume_type ] }
             volume_description:
               get_param: [ node_bridge, guest_name ]
