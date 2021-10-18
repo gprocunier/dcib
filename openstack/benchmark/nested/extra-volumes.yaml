@@ -8,12 +8,16 @@ parameters:
     default: {}
   instance_id:
     type: string
+    default: 'id_nope'
   volume_size:
     type: number
+    default: 1
   volume_type:
     type: string
+    default: 'type_nope'
   volume_description:
-    type string
+    type: string
+    default: 'desc_nope'
 
 resources:
 
