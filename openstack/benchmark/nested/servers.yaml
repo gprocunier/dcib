@@ -55,7 +55,7 @@ resources:
         get_param: [ config_data, deploy_count, silver_server_count ]
       resource_def:
         type:
-          get_param: [ config_data, heat_node ]
+          get_param: [ config_data, templates, node ]
         properties:
           node_bridge:
             NodeIndex: "%index%"
@@ -78,11 +78,11 @@ resources:
               get_param: [ config_data, workload_network ]
             security_groups:
               get_param: [ config_data, workload_sg ]
-            share_info:
+            share_location:
               get_param: [ stack_bridge, share_location ]
             cloud_init:
               get_file: https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/cloud-init/node-config-centos.sh
-
+              
   bronze_server_rg:
     type: OS::Heat::ResourceGroup
     properties:
@@ -90,7 +90,7 @@ resources:
         get_param: [ config_data, deploy_count, bronze_server_count ]
       resource_def:
         type:
-          get_param: [ config_data, heat_node ]
+          get_param: [ config_data, templates, node ]
         properties:
           node_bridge:
             NodeIndex: "%index%"
@@ -113,7 +113,8 @@ resources:
               get_param: [ config_data, workload_network ]
             security_groups:
               get_param: [ config_data, workload_sg ]
-            share_info:
+            share_location:
               get_param: [ stack_bridge, share_location ]
             cloud_init:
               get_file: https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/cloud-init/node-config-centos.sh
+              
