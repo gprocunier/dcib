@@ -106,8 +106,8 @@ resources:
             instance_id:
               get_resource: my_instance
             volume_size:
-              get_param: [ node_bridge, ivar, size ]
+              get_param: [ node_bridge, { get_param: ivar }, size ]
             volume_type:
-              get_param: [ node_bridge, ivar, volume_type ]
+              get_param: [ node_bridge, { get_param: ivar }, volume_type ]
             volume_description:
               get_param: [ node_bridge, guest_name ]
