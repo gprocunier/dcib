@@ -3,7 +3,7 @@ parameter_defaults:
   
     templates:
       node: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/node.yaml'
-      extra_volumes: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/extra_volumes.yaml'
+      extra_volumes: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/extra-volumes.yaml'
       
     deploy_count:
       gold_server_count: 1
