@@ -4,11 +4,10 @@ description: attach volumes to instances
 
 parameters:
   volume_size:
-    type: string
-#    type: number
-#    default: 1
-#    constraints:
-#      - range: { min: 1, max: 1024 }
+    type: number
+    default: 1
+    constraints:
+      - range: { min: 1, max: 1024 }
   instance_id:
     type: string
   volume_type:
