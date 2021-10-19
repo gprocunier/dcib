@@ -10,9 +10,9 @@ parameter_defaults:
       silver_server_count: 1
       bronze_server_count: 1
 
-    gold_flavor: g1.2xlarge
-    silver_flavor: s1.2xlarge
-    bronze_flavor: b1.2xlarge
+    gold_flavor: g1.small
+    silver_flavor: s1.small
+    bronze_flavor: b1.ssmall
     
     boot_volume_size: 40
     boot_volume_type: "stripe-vdo"
