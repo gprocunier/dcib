@@ -8,19 +8,19 @@ I am also using the ansible bootstrap script to configure this host for remote c
 
 ```
 #ps1_sysnative
-$ansible_config_script='https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'
-$local_admin_password='Benchmark1' | ConvertTo-SecureString -AsPlainText -Force
-$computerName='windows-test'
+$ansible_config_script = 'https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'
+$ansible_config_file = "C:\Windows\Temp\ConfigureRemotingForAnsible.ps1"
+$local_admin_password = 'Benchmark1'
+
 
 Write-Output "Updating local Administrator password"
 net user Administrator $local_admin_password
 
 Write-Output "Downloading ansible configuration script"
-(new-object system.net.webclient).DownloadFile($ansible_config_script)
+(new-object system.net.webclient).DownloadFile($ansible_config_script, $ansible_config_file)
 
 Write-Output "Running ansible configuration script"
-C:\Temp\ConfigureRemotingForAnsible.ps1
-
+& $ansible_config_file
 
 Write-Output "Updating computer name and reboot"
 Rename-Computer -NewName $computerName -Restart
@@ -36,20 +36,20 @@ Likewise I can have heat generate a random password for $local_admin_password an
 
 ```
 #ps1_sysnative
-$ansible_config_script='https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'
-$local_admin_password='Benchmark1' | ConvertTo-SecureString -AsPlainText -Force
-$computerName='___INSTANCE_NAME___'
+$ansible_config_script = 'https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'
+$ansible_config_file = "C:\Windows\Temp\ConfigureRemotingForAnsible.ps1"
+$local_admin_password = 'Benchmark1'
+$computerName = '___INSTANCE_NAME___'
 
 Write-Output "Updating local Administrator password"
 net user Administrator $local_admin_password
 
 Write-Output "Downloading ansible configuration script"
-(new-object system.net.webclient).DownloadFile($ansible_config_script)
+(new-object system.net.webclient).DownloadFile($ansible_config_script, $ansible_config_file)
 
 Write-Output "Running ansible configuration script"
-C:\Temp\ConfigureRemotingForAnsible.ps1
-
+& $ansible_config_file
 
 Write-Output "Updating computer name and reboot"
-Rename-Computer -NewName $computerName -Restart
+Rename-Computer -NewName $computerName -Restart```
 ```
