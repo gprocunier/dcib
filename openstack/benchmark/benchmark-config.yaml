@@ -12,7 +12,7 @@ parameter_defaults:
 
     gold_flavor: g1.small
     silver_flavor: s1.small
-    bronze_flavor: b1.ssmall
+    bronze_flavor: b1.small
     
     boot_volume_size: 40
     boot_volume_type: "stripe-vdo"
