@@ -69,8 +69,6 @@ platform:
     # name of the external network where the floating ips live
     externalNetwork: external
     ingressVIP: 10.0.0.7
-    trunkSupport: true
-    octaviaSupport: true
     # rhcos gets uploaded to glance and these are performance and behavioral 
     # properties we need to set
     # hw_disk_bus / hw_scsi_model are required to configure the guest to use virtio-scsi
