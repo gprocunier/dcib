@@ -40,6 +40,8 @@ networking:
   # created by the installer, host networking for the nodes
   machineNetwork:
   - cidr: 10.0.0.0/16
+  # We use the OpenStack integrated networkType instead of OpenShiftSDN
+  # this will leverage neutron and ovn-octavia for network/lb
   networkType: Kuryr
   serviceNetwork:
   - 172.30.0.0/16
@@ -71,6 +73,14 @@ platform:
     octaviaSupport: true
     # rhcos gets uploaded to glance and these are performance and behavioral 
     # properties we need to set
+    # hw_disk_bus / hw_scsi_model are required to configure the guest to use virtio-scsi
+    # hw_rng_model provides entropy so the guest wont deadlock from high crypto ops
+    # hw_vif_model / hw_vif_multiqueue_enabled are required to enable high perf smp networking
+    # hw_watchdog_action will congfigure the guest kernel to load the software watchdog to reboot on oops
+    # hw_qemu_gust_agent will configure the guest agent if available
+    # os_require_quiesce will try and quiesce the block devices for backups/snaps from cinder
+    # os_distro / os_type are historic kvm optimizations
+    # cinder_img_volume_type guarnatees placement of the image if not defined
     clusterOSImageProperties:
       "hw_disk_bus": "scsi"
       "hw_rng_model": "virtio"
