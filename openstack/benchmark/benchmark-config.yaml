@@ -23,32 +23,32 @@ parameter_defaults:
     # stripe-vdo         = 2T Raw, 10:1 dedupe @ 20T but benchmark data might not dedupe well factor 30x 32G volumes
     extra_volumes:
       gold:
-        - volume_type: stripe-performance
-          size: 128
-        - volume_type: stripe-ultra
-          size: 32
         - volume_type: tripleo
           size: 128
-        - volume_type: stripe-vdo
+        - volume_type: stripe-performance
+          size: 64
+        - volume_type: stripe-ultra
           size: 32
+        - volume_type: stripe-vdo
+          size: 16
       silver:
-        - volume_type: stripe-performance
-          size: 128
-        - volume_type: stripe-ultra
-          size: 32
         - volume_type: tripleo
           size: 128
-        - volume_type: stripe-vdo
+        - volume_type: stripe-performance
+          size: 64
+        - volume_type: stripe-ultra
           size: 32
+        - volume_type: stripe-vdo
+          size: 16
       bronze:
-        - volume_type: stripe-performance
-          size: 128
-        - volume_type: stripe-ultra
-          size: 32
         - volume_type: tripleo
           size: 128
-        - volume_type: stripe-vdo
+        - volume_type: stripe-performance
+          size: 64
+        - volume_type: stripe-ultra
           size: 32
+        - volume_type: stripe-vdo
+          size: 16
 
     ssh_keypair: 'bench-key'
     # os_image: 'CentOS-Stream-GenericCloud-8-20210603.0.x86_64'
