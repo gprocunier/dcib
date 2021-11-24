@@ -1,0 +1,62 @@
+#!/bin/bash
+# adaptation of https://gist.github.com/wankdanker/1206923
+# greg.procunier@redhat.com [11/24/21]
+#
+# track the results of ksmd on memory dedupe
+#
+# usage: ksmstat <count> <interval>
+#
+# eg. display ksm stats every 15s for 60m
+#   
+#  ksmstat 240 15
+#         Shared        Sharing       Unshared       Volatile      Sharing:Shared     Unshare:Sharing           Saved
+#        4926057       40017883       37207954       24255932              8.12:1              0.92:1         156319M
+#        4927857       40027648       37207041       24245280              8.12:1              0.92:1         156358M
+#        4930220       40039903       37206087       24231616              8.12:1              0.92:1         156405M
+#        4930002       40038762       37205920       24233143              8.12:1              0.92:1         156401M
+#        4928753       40036238       37214880       24227955              8.12:1              0.92:1         156391M
+
+export LC_NUMERIC="en_US.UTF-8"
+
+count=${1:-1}
+interval=${2:-1}
+
+if [ "$1" != "" ]; then
+
+
+echo "
+----------------------------------------------------------------------------
+http://www.kernel.org/doc/Documentation/vm/ksm.txt :
+
+The effectiveness of KSM and MADV_MERGEABLE is shown in /sys/kernel/mm/ksm/:
+
+pages_shared     - how many shared pages are being used
+pages_sharing    - how many more sites are sharing them i.e. how much saved
+pages_unshared   - how many pages unique but repeatedly checked for merging
+pages_volatile   - how many pages changing too fast to be placed in a tree
+full_scans       - how many times all mergeable areas have been scanned
+
+A high ratio of pages_sharing to pages_shared indicates good sharing, but
+a high ratio of pages_unshared to pages_sharing indicates wasted effort.
+pages_volatile embraces several different kinds of activity, but a high
+proportion there would also indicate poor use of madvise MADV_MERGEABLE.
+----------------------------------------------------------------------------
+"
+fi;
+
+
+printf "%15s%15s%15s%15s%20s%20s%16s\n" "Shared" "Sharing" "Unshared" "Volatile" "Sharing:Shared" "Unshare:Sharing" "Saved"                                                                                                                  
+for (( i=0; i<count; i++))
+do
+  pages_shared=$(</sys/kernel/mm/ksm/pages_shared)
+  pages_sharing=$(</sys/kernel/mm/ksm/pages_sharing)
+  pages_unshared=$(</sys/kernel/mm/ksm/pages_unshared)
+  pages_volatile=$(</sys/kernel/mm/ksm/pages_volatile)
+  page_size=$(getconf PAGESIZE)
+  ratio_sharing_to_shared=$(echo "scale=2;$pages_sharing / $pages_shared"|bc)
+  ratio_unshared_to_sharing=$(echo "scale=2;$pages_unshared / $pages_sharing"|bc)
+  saved=$(echo "scale=0;$pages_sharing * $page_size"|bc);
+  saved=$(expr $saved / 1048576);
+  printf "%15d%15d%15d%15d%18.2f:1%18.2f:1%15dM\n" $pages_shared $pages_sharing $pages_unshared $pages_volatile $ratio_sharing_to_shared $ratio_unshared_to_sharing $saved;                                                                  
+  sleep $interval
+done
