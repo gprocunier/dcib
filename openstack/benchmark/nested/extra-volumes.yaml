@@ -35,3 +35,15 @@ resources:
         get_resource: volume
       instance_uuid:
         get_param: instance_id
+        
+  wait:
+    type: OS::Heat::WaitCondition
+    depends_on: attachment
+    properties:
+      count: 1
+      handle: { get_resource: wait_handle }
+      timeout: 600
+      
+  wait_handle:
+    type: OS::Heat::WaitConditionHandle
+    depends_on: attachment
