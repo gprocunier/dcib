@@ -1,0 +1,33 @@
+---
+- name: quickly setup volume groups and test volumes on the benchmark hosts
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    # disk_types 'key' are the size of the disk as defined in benchmark/benchmark-config.yaml
+    # extra_volumes.
+    #
+    # disk_types 'value' is a descriptive name representing the cinder storage pool associated with that disk
+    disk_types:
+      "16": "stripe-vdo"
+      "32": "stripe-ultra"
+      "64": "stripe-performance"
+      "128": "tripleo-ceph"
+  tasks:
+    - lvg:
+        vg: "{{ disk_types[type] }}"
+        pvs: "/dev/disk/by-id/{{ item.value.links.ids[0] }}"
+        state: present
+      with_dict: "{{ hostvars[inventory_hostname].ansible_devices }}"
+      when: ( ( item.value.partitions | length == 0 ) and ( item.value.model == 'QEMU HARDDISK' ) )
+      vars:
+        type: "{{ item.value.size | regex_replace('^(\\d+).*', '\\1') }}"
+    - lvol:
+        lv: "data"
+        vg: "{{ disk_types[type] }}"
+        size: "+100%FREE"
+        state: present
+      with_dict: "{{ hostvars[inventory_hostname].ansible_devices }}"
+      when: ( ( item.value.partitions | length == 0 ) and ( item.value.model == 'QEMU HARDDISK' ) )
+      vars:
+        type: "{{ item.value.size | regex_replace('^(\\d+).*', '\\1') }}"
