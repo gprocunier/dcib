@@ -1,6 +1,6 @@
 #!/bin/sh
 echo benchmark | passwd --stdin root
-dnf -y install tmux iperf3 fio pcp-system-tools sysstat
+dnf -y install tmux iperf3 fio pcp-system-tools sysstat lvm2
 cat <<_E_O_F_ >>/etc/sysctl.conf
 # allow testing with buffers up to 128MB
 net.core.rmem_max = 134217728 
