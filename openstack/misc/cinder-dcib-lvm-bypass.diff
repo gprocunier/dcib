@@ -1,0 +1,20 @@
+--- /dev/null   2021-11-28 23:33:09.675182278 +0000
++++ lvm.py      2021-11-28 23:34:08.413636507 +0000
+@@ -835,8 +835,16 @@
+     def remove_export(self, context, volume):
+         self.target_driver.remove_export(context, volume)
+
++# bypass iscsi for dcib
+     def initialize_connection(self, volume, connector):
+-        return self.target_driver.initialize_connection(volume, connector)
++        if connector['host'] != self.hostname:
++            return self.target_driver.initialize_connection(volume, connector)
++        else:
++            LOG.info("connector %s is local, using direct LVM mapping", connector['host'])
++            return {
++                'driver_volume_type': 'local',
++                'data': {'device_path': self.local_path(volume)},
++            }
+
+     def validate_connector(self, connector):
+         return self.target_driver.validate_connector(connector)
