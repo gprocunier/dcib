@@ -6,8 +6,8 @@ parameter_defaults:
       extra_volumes: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/extra-volumes.yaml'
       
     deploy_count:
-      gold_server_count: 40
-      silver_server_count: 20
+      gold_server_count: 10
+      silver_server_count: 10
       bronze_server_count: 10
 
     gold_flavor: g1.medium
