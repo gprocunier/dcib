@@ -24,7 +24,8 @@ resources:
         properties:
           node_bridge:
             NodeIndex: "%index%"
-            guest_name: "gold-workload-%index%"
+            guest_name:
+              list_join: ['-', [ { get_param: [ config_data, batch_name ] }, "gold-workload-%index%"]]
             key_name:
               get_param: [ config_data, ssh_keypair ]
             boot_volume_size:
@@ -59,7 +60,8 @@ resources:
         properties:
           node_bridge:
             NodeIndex: "%index%"
-            guest_name: "silver-workload-%index%"
+            guest_name:
+              list_join: ['-', [ { get_param: [ config_data, batch_name ] }, "silver-workload-%index%"]]
             key_name:
               get_param: [ config_data, ssh_keypair ]
             boot_volume_size:
@@ -94,7 +96,8 @@ resources:
         properties:
           node_bridge:
             NodeIndex: "%index%"
-            guest_name: "bronze-workload-%index%"
+            guest_name:
+              list_join: ['-', [ { get_param: [ config_data, batch_name ] }, "bronze-workload-%index%"]]
             key_name:
               get_param: [ config_data, ssh_keypair ]
             boot_volume_size:
