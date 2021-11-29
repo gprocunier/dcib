@@ -24,25 +24,25 @@ parameter_defaults:
     extra_volumes:
       gold:
         - volume_type: tripleo
-          size: 60
-        - volume_type: stripe-performance
           size: 40
-        - volume_type: stripe-ultra
+        - volume_type: stripe-performance
           size: 20
+        - volume_type: stripe-ultra
+          size: 10
       silver:
         - volume_type: tripleo
-          size: 60
-        - volume_type: stripe-performance
           size: 40
-        - volume_type: stripe-ultra
+        - volume_type: stripe-performance
           size: 20
+        - volume_type: stripe-ultra
+          size: 10
       bronze:
         - volume_type: tripleo
-          size: 60
-        - volume_type: stripe-performance
           size: 40
-        - volume_type: stripe-ultra
+        - volume_type: stripe-performance
           size: 20
+        - volume_type: stripe-ultra
+          size: 10
 
     ssh_keypair: 'bench-key'
     # os_image: 'CentOS-Stream-GenericCloud-8-20210603.0.x86_64'
