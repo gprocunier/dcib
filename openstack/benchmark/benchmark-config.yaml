@@ -6,8 +6,8 @@ parameter_defaults:
       extra_volumes: 'https://raw.githubusercontent.com/gprocunier/dcib/main/openstack/benchmark/nested/extra-volumes.yaml'
       
     deploy_count:
-      gold_server_count: 10
-      silver_server_count: 10
+      gold_server_count: 40
+      silver_server_count: 20
       bronze_server_count: 10
 
     gold_flavor: g1.medium
@@ -17,38 +17,32 @@ parameter_defaults:
     boot_volume_size: 40
     boot_volume_type: "stripe-vdo"
 
-    # Ceph (tripleo)     = 5T usable (factor 30x 128G volumes)
-    # stripe-performance = 5T usable (factor 30x 128G volumes)
-    # stripe-ultra       = 1T usable (factor 30x 32G volumes)
-    # stripe-vdo         = 2T Raw, 10:1 dedupe @ 20T but benchmark data might not dedupe well factor 30x 32G volumes
+    # Ceph (tripleo)     = 5T usable
+    # stripe-performance = 5T usable
+    # stripe-ultra       = 1T usable
+
     extra_volumes:
       gold:
         - volume_type: tripleo
-          size: 128
+          size: 60
         - volume_type: stripe-performance
-          size: 64
+          size: 40
         - volume_type: stripe-ultra
-          size: 32
-        - volume_type: stripe-vdo
-          size: 16
+          size: 20
       silver:
         - volume_type: tripleo
-          size: 128
+          size: 60
         - volume_type: stripe-performance
-          size: 64
+          size: 40
         - volume_type: stripe-ultra
-          size: 32
-        - volume_type: stripe-vdo
-          size: 16
+          size: 20
       bronze:
         - volume_type: tripleo
-          size: 128
+          size: 60
         - volume_type: stripe-performance
-          size: 64
+          size: 40
         - volume_type: stripe-ultra
-          size: 32
-        - volume_type: stripe-vdo
-          size: 16
+          size: 20
 
     ssh_keypair: 'bench-key'
     # os_image: 'CentOS-Stream-GenericCloud-8-20210603.0.x86_64'
