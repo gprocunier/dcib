@@ -62,7 +62,7 @@ resources:
   # Samsung 980p stripe and is approximately 5.2tb in size.  This pool
   # averages 2 million IO/s and 8 GB/s throughput and we are going to 
   # plan for at max 64 80gb volumes usable in this pool.  Each volume 
-  # should be capable of 32768 iops and be able to sustain 128MB/s @ 4k
+  # should be capable of 65536 iops and be able to sustain 256MB/s @ 4k
   # QD1.  We will also allow for burst capability of up to 512 MB/s
   
   qos-performance-by-type:
@@ -71,8 +71,8 @@ resources:
       name: qos-performance
       specs:
         "consumer": "front-end"
-        "total_iops_sec": "32768"
-        "total_bytes_sec": "134217728"
+        "total_iops_sec": "65536"
+        "total_bytes_sec": "268435456"
         "total_bytes_sec_max": "536870912"
 
   # the ultra pool averages 2.8 million IO/s and 11GB/s throughput
@@ -85,8 +85,8 @@ resources:
   # of each drive to at as the WAL and DB for the ceph storage
   #
   # Throughput seems consistent so for the time being I am going to 
-  # plan for 32 32gb volumes from a throughput pov which works out to 
-  # 327 MB/s.  I will allow for a burst of 1GB/s @ 4k.
+  # plan for ~20 volumes from a throughput pov which works out to 
+  # 512 MB/s.  I will allow for a burst of 1GB/s @ 4k.
   #
   qos-ultra-by-type:
     type: OS::Cinder::QoSSpecs
@@ -94,8 +94,8 @@ resources:
       name: qos-ultra
       specs:
         "consumer": "front-end"
-        "total_iops_sec": "262144"
-        "total_bytes_sec": "343735795"
+        "total_iops_sec": "131072"
+        "total_bytes_sec": "536870912"
         "total_bytes_sec_max": "1073741824"
 
   # the ceph pool is 4 Samsung 983e cluster split into 8 OSDs
