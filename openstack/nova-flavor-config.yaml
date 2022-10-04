@@ -8,16 +8,15 @@ resources:
 
   # The Epyc Milan 75F3 has a maxclock of 4000 Mhz
   #
-  # dedicated priority = 100% CPU time (1024 shares - not used)
-  # gold priority      =  50% CPU time (512 Shares - 2000 MHz)
-  # silver priority    =  30% CPU Time (308 Shares - 1200 MHz)
-  # bronze priority    =  20% CPU time (204 Shares - 800 MHz)
+  # ecMHz (effective constrained clock speed over time)
+  # dedicated priority = 100% CPU time (1024 shares -   not used)
+  # gold priority      =  50% CPU time ( 512 shares - 2000 ecMHz)
+  # silver priority    =  30% CPU Time ( 308 shares - 1200 ecMHz)
+  # bronze priority    =  20% CPU time ( 204 shares -  800 ecMHz)
   #
   # shares gaurantee speeds during contention, if there is no
   # contention the instances run at normal clock speed
   
-  
-
   flavor-g1.small:
     type: OS::Nova::Flavor
     properties:
@@ -35,9 +34,6 @@ resources:
         hw_rng:rate_period: 2000
         hw:vif_multiqueue_enabled: "true"
         hw:cpu_policy: shared
-
-        # quota:cpu_peroid: int
-        # quota:cpu_quota: int
         
   flavor-g1.medium:
     type: OS::Nova::Flavor
@@ -93,6 +89,24 @@ resources:
         hw:vif_multiqueue_enabled: "true"
         hw:cpu_policy: shared
 
+  flavor-g1.2xlarge:
+    type: OS::Nova::Flavor
+    properties:
+      name: g1.2xlarge
+      disk: 40
+      ram: 16384
+      vcpus: 8
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 512
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
   flavor-s1.small:
     type: OS::Nova::Flavor
     properties:
@@ -110,9 +124,6 @@ resources:
         hw_rng:rate_period: 2000
         hw:vif_multiqueue_enabled: "true"
         hw:cpu_policy: shared
-
-        # quota:cpu_peroid: int
-        # quota:cpu_quota: int
         
   flavor-s1.medium:
     type: OS::Nova::Flavor
@@ -157,6 +168,24 @@ resources:
       disk: 40
       ram: 16384
       vcpus: 4
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 308
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
+
+  flavor-s1.2xlarge:
+    type: OS::Nova::Flavor
+    properties:
+      name: s1.2xlarge
+      disk: 40
+      ram: 16384
+      vcpus: 8
       is_public: "true"
       extra_specs:
         hw:cpu_policy: shared
@@ -243,3 +272,20 @@ resources:
         hw:vif_multiqueue_enabled: "true"
         hw:cpu_policy: shared
 
+  flavor-b1.2xlarge:
+    type: OS::Nova::Flavor
+    properties:
+      name: b1.2xlarge
+      disk: 40
+      ram: 16384
+      vcpus: 8
+      is_public: "true"
+      extra_specs:
+        hw:cpu_policy: shared
+        hw:mem_page_size: large
+        quota:cpu_shares: 204
+        hw_rng:allowed: "true"
+        hw_rng:rate_bytes: 2000
+        hw_rng:rate_period: 2000
+        hw:vif_multiqueue_enabled: "true"
+        hw:cpu_policy: shared
