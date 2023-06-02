@@ -112,6 +112,9 @@ resources:
   # 5tb broken into 50 128gb volumes
   # Due to the replication read and write ios need to be tiered
   # differently since writes are 2x more expensive than reads.
+  #
+  # model after aws gp2 ebs specification:
+  # https://aws.amazon.com/ebs/general-purpose/
 
   qos-ceph-by-size: 
     type: OS::Cinder::QoSSpecs
@@ -119,11 +122,12 @@ resources:
       name: qos-ceph
       specs:
         "consumer": "front-end"
-        "read_iops_sec_per_gb": "43"
-        "write_iops_sec_per_gb": "21"
-        "write_bytes_sec_per_gb": "1048576"
-        "read_bytes_sec_per_gb": "2097152"
-
+        "total_iops_sec_per_gb": "3"
+        "total_iops_sec_per_gb_min": "100"
+        # Limit bandwidth to 250MB/s
+        "total_bytes_sec": "262144000"
+        
+  # attach policies
   qos-attach-vdo:
     type: OS::Cinder::QoSAssociation
     properties:
