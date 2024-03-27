@@ -1,0 +1,99 @@
+heat_template_version: wallaby
+description: >
+  Initialize the following volume types and qos specs for 
+  RHCS6 and Pure Flash Array
+
+resources:
+
+  # define the cinder volume types and associate them
+  # to the different backends
+
+  rhcs6-gp2:
+    type: OS::Cinder::VolumeType
+    properties:
+      name: rhcs6-gp2
+      description: 'IO-per-GB volume type'
+      is_public: true
+      metadata:
+        volume_backend_name: 'tripleo_ceph'
+
+  pure-gp2:
+    type: OS::Cinder::VolumeType
+    properties:
+      name: pure-gp2
+      description: 'IO-per-GB volume type'
+      is_public: true
+      metadata:
+        volume_backend_name: 'tripleo_pure'
+
+  pure-gp3:
+    type: OS::Cinder::VolumeType
+    properties:
+      name: pure-gp3
+      description: 'fixed 3000 IO/s volume type'
+      is_public: true
+      metadata:
+        volume_backend_name: 'tripleo_pure'
+
+  # define qos behavior profiles
+  pure-gp3-qos:
+    type: OS::Cinder::QoSSpecs
+    properties:
+      name: pure-gp3-qos
+      specs:
+        "consumer": "front-end"
+        # baseline IO/s
+        "total_iops_sec_min": "3000"
+        # IO/s ceiling
+        "total_iops_sec": "16000"
+        # baseline throughput 128MiB/s
+        "total_bytes_sec_min": "134217728"
+        # maximal throughput 1000MiB/s
+        "total_bytes_sec": "1048576000"
+
+  rhcs6-gp2-qos:
+    type: OS::Cinder::QoSSpecs
+    properties:
+      name: rhcs6-gp2-qos
+      specs:
+        "consumer": "front-end"
+        "total_iops_sec_per_gb": "3"
+        "total_iops_sec_per_gb_min": "100"
+        # Limit bandwidth to 250MiB/s
+        "total_bytes_sec": "262144000"
+
+  pure-gp2-qos:
+    type: OS::Cinder::QoSSpecs
+    properties:
+      name: pure-gp2-qos
+      specs:
+        "consumer": "front-end"
+        "total_iops_sec_per_gb": "3"
+        "total_iops_sec_per_gb_min": "100"
+        # Limit bandwidth to 250MiB/s
+        "total_bytes_sec": "262144000"
+
+  # attach policies
+  qos-attach-rhcs-gp2:
+    type: OS::Cinder::QoSAssociation
+    properties:
+      qos_specs:
+        get_resource: rhcs6-gp2-qos
+      volume_types:
+        - { get_resource: rhcs6-gp2 }
+
+  qos-attach-pure-gp2:
+    type: OS::Cinder::QoSAssociation
+    properties:
+      qos_specs:
+        get_resource: pure-gp2-qos
+      volume_types:
+        - { get_resource: pure-gp2 }
+
+  qos-attach-pure-gp3:
+    type: OS::Cinder::QoSAssociation
+    properties:
+      qos_specs:
+        get_resource: pure-gp3-qos
+      volume_types:
+        - { get_resource: pure-gp3 }
